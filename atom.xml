@@ -6,7 +6,7 @@
   <link href="https://zhou-1314.github.io/atom.xml" rel="self"/>
   
   <link href="https://zhou-1314.github.io/"/>
-  <updated>2023-11-27T14:42:51.233Z</updated>
+  <updated>2023-11-29T08:20:43.003Z</updated>
   <id>https://zhou-1314.github.io/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>学习Typora使用</title>
+    <link href="https://zhou-1314.github.io/2023/11/29/learn-typora/"/>
+    <id>https://zhou-1314.github.io/2023/11/29/learn-typora/</id>
+    <published>2023-11-29T08:16:12.000Z</published>
+    <updated>2023-11-29T08:20:43.003Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h3 id=&quot;学习Typora使用&quot;&gt;&lt;a href=&quot;#学习Typora使用&quot; class=&quot;headerlink&quot; title=&quot;学习Typora使用&quot;&gt;&lt;/a&gt;学习Typora使用&lt;/h3&gt;&lt;h4 id=&quot;Typora简介&quot;&gt;&lt;a href=&quot;#Typora简介&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="编程工具学习" scheme="https://zhou-1314.github.io/categories/%E7%BC%96%E7%A8%8B%E5%B7%A5%E5%85%B7%E5%AD%A6%E4%B9%A0/"/>
+    
+    
+    <category term="Markdown" scheme="https://zhou-1314.github.io/tags/Markdown/"/>
+    
+    <category term="Typora" scheme="https://zhou-1314.github.io/tags/Typora/"/>
+    
+  </entry>
   
   <entry>
     <title>博客开源</title>
