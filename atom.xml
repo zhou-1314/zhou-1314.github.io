@@ -6,7 +6,7 @@
   <link href="https://zhou-1314.github.io/atom.xml" rel="self"/>
   
   <link href="https://zhou-1314.github.io/"/>
-  <updated>2023-11-30T06:15:42.561Z</updated>
+  <updated>2023-12-01T03:50:10.965Z</updated>
   <id>https://zhou-1314.github.io/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>学习Git使用</title>
+    <link href="https://zhou-1314.github.io/2023/12/01/learn-git/"/>
+    <id>https://zhou-1314.github.io/2023/12/01/learn-git/</id>
+    <published>2023-12-01T03:14:12.000Z</published>
+    <updated>2023-12-01T03:50:10.965Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h3 id=&quot;学习Git使用&quot;&gt;&lt;a href=&quot;#学习Git使用&quot; class=&quot;headerlink&quot; title=&quot;学习Git使用&quot;&gt;&lt;/a&gt;学习Git使用&lt;/h3&gt;&lt;h4 id=&quot;Git简介&quot;&gt;&lt;a href=&quot;#Git简介&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="编程工具学习" scheme="https://zhou-1314.github.io/categories/%E7%BC%96%E7%A8%8B%E5%B7%A5%E5%85%B7%E5%AD%A6%E4%B9%A0/"/>
+    
+    
+    <category term="Git" scheme="https://zhou-1314.github.io/tags/Git/"/>
+    
+    <category term="Tips" scheme="https://zhou-1314.github.io/tags/Tips/"/>
+    
+  </entry>
   
   <entry>
     <title>学习Typora使用</title>
