@@ -1,0 +1,1948 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+    <!-- shw2018 洪卫  modify 2019.08.15-->
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="文献美图汇总--火山图, Sustech single-cell DeepLearning MachineLearning Kevin_Hhui 周伟戈 生物信息学 深度学习">
+    <meta name="baidu-site-verification" content="fmlEuI34ir" />
+    <meta name="google-site-verification" content="KeoTn_OFy4ndJwXNmm2gMeQfPhd7alqE9vQDwI32KCY" />
+    <meta name="description" content="火山图绘制–形式一效果如下
+
+相关代码：
+library(ggplot2)
+
+setwd(&#34;C:/Users/Kevin/Desktop/R_Visualization/01.火山图&#34;)
+
+########## 普通火山图 ########">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>文献美图汇总--火山图 | ZhouweigeBlog</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="/libs/awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.bootcss.com/materialize/1.0.0/css/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.bootcss.com/aos/3.0.0-beta.6/aos.css">
+    <link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.bootcss.com/lightgallery/1.6.12/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="/css/my.css">
+    
+    <style type="text/css">
+        
+            
+            code[class*="language-"],
+            pre[class*="language-"] {
+                white-space: pre !important;
+            }
+
+        
+    </style>
+
+    <script src="https://libs.baidu.com/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://sdk.jinrishici.com/v2/browser/jinrishici.js" charset="utf-8"></script>
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function () {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?46e79e71af0709a5b9106bf20cecc493";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+    
+    
+        <script>
+            (function(){
+                var bp = document.createElement('script');
+                var curProtocol = window.location.protocol.split(':')[0];
+                if (curProtocol === 'https') {
+                    bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+                }
+                else {
+                    bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+                }
+                var s = document.getElementsByTagName("script")[0];
+                s.parentNode.insertBefore(bp, s);
+            })();
+        </script>
+    
+
+<meta name="generator" content="Hexo 7.0.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+<link rel="alternate" href="/atom.xml" title="ZhouweigeBlog" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+    <body>
+
+        <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <span class="logo-span">ZhouweigeBlog</span>
+                </a>
+            </div>
+            
+
+
+<!-- <a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fa fa-navicon"></i></a>
+<ul class="right">
+    
+    <li class="hide-on-med-and-down">
+        <a href="/" class="waves-effect waves-light">
+            
+            <i class="fa fa-home"></i>
+            
+            <span>首页</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/tags" class="waves-effect waves-light">
+            
+            <i class="fa fa-tags"></i>
+            
+            <span>标签</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/categories" class="waves-effect waves-light">
+            
+            <i class="fa fa-bookmark"></i>
+            
+            <span>分类</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/archives" class="waves-effect waves-light">
+            
+            <i class="fa fa-archive"></i>
+            
+            <span>归档</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/galleries" class="waves-effect waves-light">
+            
+            <i class="fa fa-photo"></i>
+            
+            <span>相册</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/about" class="waves-effect waves-light">
+            
+            <i class="fa fa-user-circle-o"></i>
+            
+            <span>关于我</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/friends" class="waves-effect waves-light">
+            
+            <i class="fa fa-address-book"></i>
+            
+            <span>友情链接</span>
+        </a>
+    </li>
+    
+    <li>
+        <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+            <i id="searchIcon" class="fa fa-search" title="搜索"></i>
+        </a>
+    </li>
+</ul> -->
+
+<!-- 支持二级菜单特性 洪卫 shw2018 modify 2019.09.17  -->
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fa fa-navicon"></i></a>
+<ul class="right nav-menu">
+    
+      <li class="hide-on-med-and-down nav-item" >
+
+        
+            <a href="/" class="waves-effect waves-light">
+              
+                <i class="fa fa-home"></i>
+              
+              <span>首页</span>
+            </a>
+
+            
+      </li>
+    
+      <li class="hide-on-med-and-down nav-item" >
+
+        
+            <a href="/tags" class="waves-effect waves-light">
+              
+                <i class="fa fa-tags"></i>
+              
+              <span>标签</span>
+            </a>
+
+            
+      </li>
+    
+      <li class="hide-on-med-and-down nav-item" >
+
+        
+            <a href="/categories" class="waves-effect waves-light">
+              
+                <i class="fa fa-bookmark"></i>
+              
+              <span>分类</span>
+            </a>
+
+            
+      </li>
+    
+      <li class="hide-on-med-and-down nav-item" >
+
+        
+            <a href="/archives" class="waves-effect waves-light">
+              
+                <i class="fa fa-archive"></i>
+              
+              <span>归档</span>
+            </a>
+
+            
+      </li>
+    
+      <li class="hide-on-med-and-down nav-item" >
+
+        
+            <a href="/galleries" class="waves-effect waves-light">
+              
+                <i class="fa fa-photo"></i>
+              
+              <span>相册</span>
+            </a>
+
+            
+      </li>
+    
+      <li class="hide-on-med-and-down nav-item" >
+
+        
+            <a href="/about" class="waves-effect waves-light">
+              
+                <i class="fa fa-user-circle-o"></i>
+              
+              <span>关于我</span>
+            </a>
+
+            
+      </li>
+    
+      <li class="hide-on-med-and-down nav-item" >
+
+        
+            <a href="/friends" class="waves-effect waves-light">
+              
+                <i class="fa fa-address-book"></i>
+              
+              <span>友情链接</span>
+            </a>
+
+            
+      </li>
+    
+
+    <li>
+        <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+            <i id="searchIcon" class="fa fa-search" title="搜索"></i>
+        </a>
+    </li>
+
+</ul>
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <div class="logo-name">ZhouweigeBlog</div>
+        <div class="logo-desc">
+            
+            南方科技大学 | 生物信息学 | 单细胞测序
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li>
+            <a href="/" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-home"></i>
+                
+                首页
+            </a>
+        </li>
+        
+        <li>
+            <a href="/tags" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-tags"></i>
+                
+                标签
+            </a>
+        </li>
+        
+        <li>
+            <a href="/categories" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-bookmark"></i>
+                
+                分类
+            </a>
+        </li>
+        
+        <li>
+            <a href="/archives" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-archive"></i>
+                
+                归档
+            </a>
+        </li>
+        
+        <li>
+            <a href="/galleries" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-photo"></i>
+                
+                相册
+            </a>
+        </li>
+        
+        <li>
+            <a href="/about" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-user-circle-o"></i>
+                
+                关于我
+            </a>
+        </li>
+        
+        <li>
+            <a href="/friends" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-address-book"></i>
+                
+                友情链接
+            </a>
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/zhou-1314/zhou-1314.github.io" class="waves-effect waves-light" target="_blank">
+                <i class="fa fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+
+   
+   
+<!-- 支持二级菜单特性 洪卫 shw2018 modify 2019.09.17  -->
+<!-- <ul class="menu-list mobile-menu-list">
+    
+        <li class="m-nav-item">
+                
+                    <a href="/" class="waves-effect waves-light">
+                        
+                        <i class="fa fa-fw fa-home"></i>
+                        
+                        首页
+                    </a>
+              
+            </li>
+        
+        <li class="m-nav-item">
+                
+                    <a href="/tags" class="waves-effect waves-light">
+                        
+                        <i class="fa fa-fw fa-tags"></i>
+                        
+                        标签
+                    </a>
+              
+            </li>
+        
+        <li class="m-nav-item">
+                
+                    <a href="/categories" class="waves-effect waves-light">
+                        
+                        <i class="fa fa-fw fa-bookmark"></i>
+                        
+                        分类
+                    </a>
+              
+            </li>
+        
+        <li class="m-nav-item">
+                
+                    <a href="/archives" class="waves-effect waves-light">
+                        
+                        <i class="fa fa-fw fa-archive"></i>
+                        
+                        归档
+                    </a>
+              
+            </li>
+        
+        <li class="m-nav-item">
+                
+                    <a href="/galleries" class="waves-effect waves-light">
+                        
+                        <i class="fa fa-fw fa-photo"></i>
+                        
+                        相册
+                    </a>
+              
+            </li>
+        
+        <li class="m-nav-item">
+                
+                    <a href="/about" class="waves-effect waves-light">
+                        
+                        <i class="fa fa-fw fa-user-circle-o"></i>
+                        
+                        关于我
+                    </a>
+              
+            </li>
+        
+        <li class="m-nav-item">
+                
+                    <a href="/friends" class="waves-effect waves-light">
+                        
+                        <i class="fa fa-fw fa-address-book"></i>
+                        
+                        友情链接
+                    </a>
+              
+            </li>
+        
+
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/zhou-1314/zhou-1314.github.io" class="waves-effect waves-light" target="_blank">
+                <i class="fa fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul> -->
+
+</div>
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/zhou-1314/zhou-1314.github.io" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+        
+<script src="/libs/cryptojs/crypto-js.min.js"></script>
+<script>
+    (function() {
+        let pwd = '';
+        if (pwd && pwd.length > 0) {
+            if (pwd !== CryptoJS.SHA256(prompt('请输入访问本文章的密码')).toString(CryptoJS.enc.Hex)) {
+                alert('密码错误，将返回主页！');
+                location.href = '/';
+            }
+        }
+    })();
+</script>
+
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/3.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <div class="description center-align post-title">
+                        文献美图汇总--火山图
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        margin: 35px 0 15px 0;
+        padding-left: 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #toc-content .is-active-link::before {
+        background-color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 20px;
+        bottom: 76px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- shw2018 洪卫  modify 2019.08.15-->
+<!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/Volcano-plot/" target="_blank">
+                                <span class="chip bg-color">Volcano plot</span>
+                            </a>
+                        
+                            <a href="/tags/ggplot2/" target="_blank">
+                                <span class="chip bg-color">ggplot2</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fa fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/R-visualization/" class="post-category" target="_blank">
+                                R visualization
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <div class="post-info">
+                <div class="post-date info-break-policy">
+                    <i class="fa fa-calendar-minus-o fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2023-12-13
+                </div>
+
+                <div class="post-author info-break-policy">
+                    <i class="fa fa-user-o fa-fw"></i>作者:&nbsp;&nbsp;
+                    
+                        Kevin_Hhui
+                    
+                </div>
+
+                
+                    
+                    <div class="info-break-policy">
+                        <i class="fa fa-file-word-o fa-fw"></i>文章字数:&nbsp;&nbsp;
+                        558
+                    </div>
+                    
+
+                    
+                    <div class="info-break-policy">
+                        <i class="fa fa-clock-o fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                        3 分
+                    </div>
+                    
+                
+                
+                
+                        <span id="busuanzi_container_site_pv" style='display:none'></span>
+                        <i class="fa fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv" ></span>
+    
+                
+
+            </div>
+        </div>
+        <hr class="clearfix">
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h4 id="火山图绘制–形式一"><a href="#火山图绘制–形式一" class="headerlink" title="火山图绘制–形式一"></a>火山图绘制–形式一</h4><p><strong>效果如下</strong></p>
+<p><img src="https://s2.loli.net/2023/12/13/ZQWTw4CVefDylxR.png" alt="volcano1.png"></p>
+<p><strong>相关代码：</strong></p>
+<pre class="line-numbers language-R"><code class="language-R">library(ggplot2)
+
+setwd("C:/Users/Kevin/Desktop/R_Visualization/01.火山图")
+
+########## 普通火山图 ############ 
+rm(list = ls())
+
+df <- read.table('diff_DEseq2.xls', header = TRUE, sep = "\t",row.names = 1)
+head(df)
+
+#对差异基因的p值从小到大排序
+df <- df[order(df$padj),]
+up.genes = head(df$gene[which(df$change == "up")],5)
+##低表达的基因中，选择adj.P.Val值最小的10个
+down.genes = head(df$gene[which(df$change == "down")],5)
+
+sig_genes <- df %>% filter(gene %in% c(up.genes, down.genes))
+up_genes <- df %>% filter(gene %in% up.genes)
+down_genes <- df %>% filter(gene %in% down.genes)
+
+table(df$change)
+
+df$change <- factor(df$change, levels = c('up','down','stable'))
+library(ggrepel)
+df %>%
+  ggplot(aes(x = log2FoldChange, y = -log10(padj))) +
+  # 绘制基础散点图，并根据 gene_type 对点的颜色进行分类，设置点的透明度 (alpha=0.6)，形状 (shape = 16)，大小 (size = 1)
+  geom_point(aes(color = change), alpha = 0.6, shape = 16, size = 2) +
+  # 从 up_genes 数据框中绘制特定形状的散点图，填充颜色为红色，边框颜色为黑色，大小为 2
+  geom_point(data = up_genes, shape = 21, size = 3, fill = "#C70E7BFF", colour = "#C70E7BFF") +
+  # 从 down_genes 数据框中绘制特定形状的散点图，填充颜色为钢蓝色，边框颜色为黑色，大小为 2
+  geom_point(data = down_genes, shape = 21, size = 3, fill = "#007BC3FF", colour = "#007BC3FF") +
+  # 添加水平虚线，y 轴截距为 -log10(0.05),表示显著性阈值为 0.05
+  geom_hline(yintercept = -log10(0.05), linetype = "dashed") +
+  # 添加垂直虚线，x 轴截距为 log2(0.5) 和 log2(2)，表示折叠变化范围为 0.5 到 2
+  geom_vline(xintercept = c(log2(0.5),log2(2)), linetype = "dashed") +
+  # 在图中显示 sig_genes 数据框中基因符号的标签
+  geom_label_repel(data = sig_genes, aes(label = gene), force = 2, nudge_y = 1) +
+  # 设置 gene_type 对应的颜色映射
+  scale_color_manual(values = c("up" = "#FC6882FF", "down" = "#54BCD1FF", "stable" = "grey"),
+                     labels = c(  "up 559", 'down 582', 'stable 19752')) +
+  # 设置 x 轴的刻度和范围
+  # scale_x_continuous(breaks = c(seq(-10, 10, 2)), limits = c(-10, 10)) +
+  # 设置 x 轴和 y 轴的标签
+  labs(x = "log2(fold change)", y = "-log10(adjusted P-value)", colour = "Expression change") +
+  # 调整图例外观，将图例大小设为 5，位置设置为右上角
+  guides(color = guide_legend(override.aes = list(size = 5))) +
+  theme_bw() + #  # 设置图的主题为白色背景
+  # 设置图的主题样式，包括边框、网格线、背景等
+  theme(panel.border = element_rect(colour = "black", fill = NA, size = 0.5),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        plot.background = element_blank(),
+        axis.title = element_text( color = "black", size = 10),
+        axis.text = element_text(color = "black", size = 9),
+        legend.background = element_blank(),
+        legend.title = element_text( color = "black", size = 10),
+        legend.text = element_text( color = "black", size = 9),
+        legend.spacing.x = unit(0, "cm"),
+        legend.position = c(0.88, 0.89)  # 设置图例位置为右上角
+  )
+
+ggsave('volcano1.png',dpi = 300,bg = 'white',width = 8,height = 7)
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="火山图绘制–形式二"><a href="#火山图绘制–形式二" class="headerlink" title="火山图绘制–形式二"></a>火山图绘制–形式二</h4><p><strong>效果如下</strong></p>
+<p><img src="https://s2.loli.net/2023/12/13/PruAWCGfoE4QwSs.png" alt="volcano2.png"></p>
+<p><strong>相关代码</strong></p>
+<pre class="line-numbers language-R"><code class="language-R">########## 普通火山图2 ############ 
+rm(list = ls())
+
+####----load R Package----####
+library(tidyverse)
+library(ggrepel)
+library(ggfun)
+library(grid)
+
+####----load data----####
+df <- read.table('diff_DEseq2.xls', header = TRUE, sep = "\t",row.names = 1)
+
+####----plot----####
+ggplot(data = df) + 
+  geom_point(aes(x = log2FoldChange, y = -log10(padj), 
+                 color = log2FoldChange,
+                 size = -log10(padj))) + 
+  geom_point(data =  df %>%
+               tidyr::drop_na() %>%
+               dplyr::filter(change != "stable") %>%
+               dplyr::arrange(desc(-log10(padj))) %>%
+               dplyr::slice(1:20),
+             aes(x = log2FoldChange, y = -log10(padj),
+                 # fill = log2FoldChange,
+                 size = -log10(padj)),
+             shape = 21, show.legend = F, color = "#000000") +
+  geom_text_repel(data =  df %>% 
+                    tidyr::drop_na() %>% 
+                    dplyr::filter(change != "stable") %>%
+                    dplyr::arrange(desc(-log10(padj))) %>%
+                    dplyr::slice(1:15) %>%
+                    dplyr::filter(change == "up"),
+                  aes(x = log2FoldChange, y = -log10(padj), label = gene),
+                  box.padding = 0.5,
+                  nudge_x = 0.5,
+                  nudge_y = 0.2,
+                  segment.curvature = -0.1,
+                  segment.ncp = 3,
+                  # segment.angle = 10,
+                  direction = "y", 
+                  hjust = "left"
+  ) + 
+  geom_text_repel(data =  df %>% 
+                    tidyr::drop_na() %>% 
+                    dplyr::filter(change != "stable") %>%
+                    dplyr::arrange(desc(-log10(padj))) %>%
+                    dplyr::slice(1:15) %>%
+                    dplyr::filter(change == "down"),
+                  aes(x = log2FoldChange, y = -log10(padj), label = gene),
+                  box.padding = 0.5,
+                  nudge_x = -0.2,
+                  nudge_y = 0.2,
+                  segment.curvature = -0.1,
+                  segment.ncp = 3,
+                  segment.angle = 20,
+                  direction = "y", 
+                  hjust = "right"
+  ) + 
+  scale_color_gradientn(colours = c("#3288bd", "#66c2a5","#ffffbf", "#f46d43", "#9e0142"),
+                        values = seq(0, 1, 0.2)) +
+  scale_fill_gradientn(colours = c("#3288bd", "#66c2a5","#ffffbf", "#f46d43", "#9e0142"),
+                       values = seq(0, 1, 0.2)) +
+  geom_vline(xintercept = c(-log2(1.5), log2(1.5)), linetype = 2) +
+  geom_hline(yintercept = -log10(0.05), linetype = 4) + 
+  scale_size(range = c(1,7)) + 
+  # ggtitle(label = "Volcano Plot",
+  #         subtitle = "volcano plot") + 
+  # xlim(c(-3, 3)) + 
+  # ylim(c(-1, 90)) + 
+  theme_bw() + 
+  theme(panel.grid = element_blank(),
+        legend.background = element_roundrect(color = "#808080", linetype = 1),
+        axis.text = element_text(size = 13, color = "#000000"),
+        axis.title = element_text(size = 15),
+        plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5)
+  ) + 
+  annotate(geom = "text", x = 2.5, y = 0.25, label = "p = 0.05", size = 5) + 
+  coord_cartesian(clip = "off") + 
+  annotation_custom(
+    grob = grid::segmentsGrob(
+      y0 = unit(-10, "pt"),
+      y1 = unit(-10, "pt"),
+      arrow = arrow(angle = 45, length = unit(.2, "cm"), ends = "first"),
+      gp = grid::gpar(lwd = 3, col = "#74add1")
+    ), 
+    xmin = range(df$log2FoldChange)[1]/10*9, 
+    xmax = range(df$log2FoldChange)[1]/10*4,
+    ymin = range(-log10(df$padj))[2]/10*9.5,
+    ymax = range(-log10(df$padj))[2]/10*9.5
+  ) +
+  annotation_custom(
+    grob = grid::textGrob(
+      label = "Down",
+      gp = grid::gpar(col = "#74add1")
+    ),
+    xmin = range(df$log2FoldChange)[1]/10*9, 
+    xmax = range(df$log2FoldChange)[1]/10*4,
+    ymin = range(-log10(df$padj))[2]/10*9.5,
+    ymax = range(-log10(df$padj))[2]/10*9.5
+  ) +
+  annotation_custom(
+    grob = grid::segmentsGrob(
+      y0 = unit(-10, "pt"),
+      y1 = unit(-10, "pt"),
+      arrow = arrow(angle = 45, length = unit(.2, "cm"), ends = "last"),
+      gp = grid::gpar(lwd = 3, col = "#d73027")
+    ), 
+    xmin = range(df$log2FoldChange)[2]/10*9, 
+    xmax = range(df$log2FoldChange)[2]/10*4,
+    ymin = range(-log10(df$padj))[2]/10*9.5,
+    ymax = range(-log10(df$padj))[2]/10*9.5
+  ) +
+  annotation_custom(
+    grob = grid::textGrob(
+      label = "Up",
+      gp = grid::gpar(col = "#d73027")
+    ),
+    xmin = range(df$log2FoldChange)[2]/10*9, 
+    xmax = range(df$log2FoldChange)[2]/10*4,
+    ymin = range(-log10(df$padj))[2]/10*9.5,
+    ymax = range(-log10(df$padj))[2]/10*9.5
+  ) 
+
+####----save result----####
+ggsave('volcano2.png',dpi = 300,bg = 'white',width = 8,height = 7)
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="火山图绘制–形式三"><a href="#火山图绘制–形式三" class="headerlink" title="火山图绘制–形式三"></a>火山图绘制–形式三</h4><p><strong>效果如下</strong></p>
+<p><img src="https://s2.loli.net/2023/12/13/CQueAYF3XOd4bxz.png" alt="volcano3.png"></p>
+<p><strong>相关代码</strong></p>
+<pre class="line-numbers language-R"><code class="language-R">########## 渐变火山图3 ############ 
+rm(list = ls())
+
+library(ggplot2) #绘图使用
+library(cowplot) #调整背景
+library(ggrepel) #加标签
+
+####----load data----####
+df <- read.table('diff_DEseq2.xls', header = TRUE, sep = "\t",row.names = 1)
+df$log10FDR <- -log10(df$padj)
+
+#新加一列label
+df$label = ""
+#对差异基因的p值从小到大排序
+df <- df[order(df$padj),]
+#高表达的基因中，选择FDR值最小的10个
+up.genes = head(df$gene[which(df$change == "up")],10)
+##低表达的基因中，选择FDR值最小的10个
+down.genes = head(df$gene[which(df$change == "down")],10)
+#将高表达基因和低表达基因合并，加入到label中
+deg.top10.genes <- c(as.character(up.genes),as.character(down.genes))
+df$label[match(deg.top10.genes,df$gene)] <- deg.top10.genes
+
+# 设置点的大小
+max_size <- 4
+min_size <- 1
+df$Size <- sqrt(min_size + (max_size - min_size) * (df$log10FDR - min(df$log10FDR)) / (max(df$log10FDR) - min(df$log10FDR)))
+
+##绘图
+ggplot(df,aes(log2FoldChange, -log10(padj)))+
+  # 横向水平参考线：
+  geom_hline(yintercept = -log10(0.05), linetype = "dashed", color = "#999999")+
+  # 纵向垂直参考线：
+  geom_vline(xintercept = c(-1.2,1.2), linetype = "dashed", color = "#999999")+
+  # 散点图:
+  geom_point(aes(size=Size, color= -log10(padj)))+
+  # 指定颜色渐变模式：
+  scale_color_gradientn(values = seq(0,1,0.2),
+                        colors = c("#39489f","#39bbec","#f9ed36","#f38466","#b81f25"))+
+  # 指定散点大小渐变模式：
+  scale_size_continuous(range = c(0.5,4))+
+  # 主题调整：
+  theme_bw()+
+  # 调整主题和图例位置：
+  theme(panel.grid = element_blank(),
+        legend.position = c(0.01,0.8),
+        legend.justification = c(0,1)
+  )+
+  # 设置部分图例不显示：
+  guides(col = guide_colourbar(title = "-Log10_p-value"),
+         size = "none")+
+  # 添加标签：
+  geom_text(aes(label=label, color = -log10(padj)), size = 3, vjust = 1.5, hjust=1)+
+  # 修改坐标轴：
+  xlab("Log2FC")+
+  ylab("-Log10(FDR p-value)")
+
+####----save result----####
+ggsave('volcano3.png',dpi = 300,bg = 'white',width = 8,height = 7)
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="火山图绘制–形式四"><a href="#火山图绘制–形式四" class="headerlink" title="火山图绘制–形式四"></a>火山图绘制–形式四</h4><p><strong>效果如下</strong></p>
+<p><img src="https://s2.loli.net/2023/12/13/D9FX68rInkpGsOS.png" alt="volcano4.png"></p>
+<p><strong>相关代码</strong></p>
+<pre class="line-numbers language-R"><code class="language-R">########## 火山图4 ############ 
+rm(list = ls())
+#相关R包载入：
+library(ggplot2)
+library(ggrepel)
+library(dplyr)
+library(patchwork)
+
+# 横坐标A—组间表达量的平均强度：
+# (log2(Mean_expA*Mean_expD))/2
+# 纵坐标M—组间差异倍数取以2为底的对数值：
+# log2FC
+
+####----load data----####
+df <- read.table('diff_DEseq2.xls', header = TRUE, sep = "\t",row.names = 1)
+
+#新建横纵坐标列：
+df$log2baseMean <- log2(df$baseMean)
+
+#ggplot2绘图：
+#自定义颜色：
+mycol <- c("#EB4232","grey90","#2DB2EB")
+
+#自定义主题：
+mytheme <- theme_classic() +
+  theme(plot.title = element_text(size = 17),
+        axis.title = element_text(size = 15),
+        axis.text = element_text(size = 14),
+        legend.text = element_text(size = 14),
+        plot.margin = margin(15,5.5,5.5,5.5))
+
+#以显著上下调Top10为例：
+up <- filter(df, change == 'up') %>% distinct(gene, .keep_all = T) %>%
+  top_n(10, -log10(padj))
+
+down <- filter(df, change == 'down') %>% distinct(gene, .keep_all = T) %>%
+  top_n(10, -log10(padj))
+
+sig <- rbind(up,down)
+
+ggplot() +
+  geom_point(data = df[df$change=='stable',],
+             aes(x = log2baseMean, y = log2FoldChange, color = change)) +
+  geom_point(data = df[df$change=='up',],
+             aes(x = log2baseMean, y = log2FoldChange, color = change)) +
+  geom_point(data = df[df$change=='down',],
+             aes(x = log2baseMean, y = log2FoldChange, color = change)) +
+  geom_point(data = sig,
+             aes(x = log2baseMean, y = log2FoldChange, color = change),
+             size = 3.5, alpha = 0.2) +
+  geom_text_repel(data = sig,
+                  aes(x = log2baseMean, y = log2FoldChange, label = gene),
+                  seed = 233,
+                  size = 3.5,
+                  color = 'black',
+                  min.segment.length = 0,
+                  force = 2,
+                  force_pull = 2,
+                  box.padding = 0.1,
+                  max.overlaps = Inf,
+                  segment.linetype = 3, #线段类型,1为实线,2-6为不同类型虚线
+                  segment.color = 'black', #线段颜色
+                  segment.alpha = 0.5, #线段不透明度
+                  nudge_x = 10 - sig$A, #标签x轴起始位置
+                  direction = "y",
+                  hjust = 0) + #0右对齐，1左对齐，0.5居中 
+  scale_colour_manual(name = '', values = rev(alpha(mycol, 0.7))) +
+  geom_hline(yintercept = 0, size = 0.5, color = "black", lty = 'dashed') +
+  labs(title = 'MA_Plot') +
+  mytheme
+####----save result----####
+ggsave('volcano4.png',dpi = 300,bg = 'white',width = 8,height = 7)
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="火山图绘制–形式五"><a href="#火山图绘制–形式五" class="headerlink" title="火山图绘制–形式五"></a>火山图绘制–形式五</h4><p><strong>效果如下</strong></p>
+<p><img src="https://s2.loli.net/2023/12/13/RONlEKIrv8GmneQ.png" alt="volcano5.png"></p>
+<p><strong>相关代码</strong></p>
+<pre class="line-numbers language-R"><code class="language-R">########## 双曲线火山图5 ############ 
+rm(list = ls())
+#相关R包载入：
+library(dplyr)
+library(ggplot2)
+library(ggrepel)
+library(patchwork)
+
+####----load data----####
+df <- read.table('diff_DEseq2.xls', header = TRUE, sep = "\t",row.names = 1)
+
+##筛选阈值确定：p＜0.05，|log2FC|＞1
+padj = 0.05
+log2FC = 1
+
+#根据反比例函数 y = 1/X和设定的阈值自定义双曲线函数：
+f <- function(x){
+  inputx <- seq(0.0001, x, by = 0.0001)
+  y <- 1/(inputx) + (-log10(padj))
+  dff <- rbind(data.frame(x = inputx + log2FC, y = y),
+               data.frame(x = -(inputx + log2FC), y = y))
+  return(dff)
+}
+#根据函数生成所需的曲线数组坐标：
+dff_curve <- f(5)
+head(dff_curve)
+
+#新增曲线数值列：
+##每列log2FoldChange值在曲线上对应的y轴坐标；
+df$curve_y <- case_when(
+  df$log2FoldChange > 0 ~ 1/(df$log2FoldChange-log2FC) + (-log10(padj)),
+  df$log2FoldChange <= 0 ~ 1/(-df$log2FoldChange-log2FC) + (-log10(padj))
+)
+#根据曲线新增上下调分组标签：
+#转换为因子指定绘图顺序；
+df$`-log10(padj)` <- -log10(df$padj) #新增-log10p列
+df$group2 <- case_when(
+  df$`-log10(padj)` > df$curve_y & df$log2FoldChange >= log2FC ~ 'up',
+  df$`-log10(padj)` > df$curve_y & df$log2FoldChange <= -log2FC ~ 'down',
+  TRUE ~ 'none'
+)
+#绘制新双曲线阈值火山图：
+df$group2 <- factor(df$group2, levels = c("up","down","none")) #指定顺序
+mycol2 <- c("#F8B606","#4A1985","#d8d8d8")
+
+#筛选显著性top10标签：
+top10 <- filter(df, group2 != "none") %>%
+  distinct(gene, .keep_all = T) %>%
+  top_n(10, abs(log2FoldChange))
+
+ggplot(data = df,
+             aes(x = log2FoldChange, y = -log10(padj), color = group2)) + #使用新的分组
+  geom_point(size = 2.2) +
+  geom_text_repel(data = top10,
+                  aes(x = log2FoldChange, y = -log10(padj), label = gene),
+                  force = 80, color = 'black', size = 3.2,
+                  point.padding = 0.5, hjust = 0.5,
+                  arrow = arrow(length = unit(0.02, "npc"),
+                                type = "open", ends = "last"),
+                  segment.color="black",
+                  segment.size = 0.3,
+                  nudge_x = 0,
+                  nudge_y = 1) + 
+  # scale_x_continuous(limits = c(-4, 4), breaks = seq(-4, 4, by = 2)) +
+  scale_y_continuous(expand = expansion(add = c(2, 0)),
+                     limits = c(0, max(range(df$`-log10(padj)`))), 
+                     breaks = seq(0,max(range(df$`-log10(padj)`)), by = 10)) +
+  scale_colour_manual(name = "", values = alpha(mycol2, 0.7)) +
+  geom_line(data = dff_curve,
+            aes(x = x, y = y), #曲线坐标
+            color = "black",lty = "dashed", size = 0.7) +
+  theme_classic() +
+  theme(
+    axis.title = element_text(size = 15),
+    axis.text = element_text(size = 14),
+    legend.text = element_text(size = 14)
+  )
+####----save result----####
+ggsave('volcano5.png',dpi = 300,bg = 'white',width = 8,height = 7)
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="火山图绘制–形式六"><a href="#火山图绘制–形式六" class="headerlink" title="火山图绘制–形式六"></a>火山图绘制–形式六</h4><p><strong>效果如下</strong></p>
+<p><img src="https://s2.loli.net/2023/12/13/1AVGngjLmSWqk9F.png" alt="Diagonal_volcano.png"></p>
+<p><strong>相关代码</strong></p>
+<pre class="line-numbers language-R"><code class="language-R">#### 对角火山图 #######
+rm(list = ls())
+
+library(ImageGP)
+library(ggplot2)
+library(ggpubr)
+library(egg)
+library(ggrepel) #加标签
+
+diffexpr <- read.table('HG_data.txt',header = T,sep = '\t',check.names = F)
+diffexpr$CG_mean <- log10(rowMeans(diffexpr[,c(2:4)])+1)
+diffexpr$HG_mean <- log10(rowMeans(diffexpr[,c(5:7)])+1)
+
+diffexpr$level <- ifelse(diffexpr$`p-value`<0.05, 
+                         ifelse(diffexpr$`log2(Fold_change)`>=1, "high glucose", 
+                                ifelse(diffexpr$`log2(Fold_change)`<=-1, "normal glucose", "NoSig")),"NoSig")
+head(diffexpr)
+
+##批量手动选择
+diffexpr  <- diffexpr %>% mutate(label = ifelse(gene %in% c("Nr4a1"),gene,""))
+
+
+p <- sp_scatterplot(diffexpr, xvariable = "HG_mean", yvariable = "CG_mean", 
+                    color_variable = "level",
+                    color_variable_order = c("NoSig","high glucose", "normal glucose"),
+                    manual_color_vector = c("grey","firebrick","dodgerblue"),
+                    legend.position = c(0.2,0.8)) + coord_fixed(1) + 
+  labs(x = 'high glucose log10(mean normalized reads + 1)',
+       y = 'normal glucose log10(mean normalized reads + 1)')+
+  geom_label_repel(aes(label = label),show.legend = F, 
+                   size = 3, box.padding = 2,max.overlaps = 10000)
+
+xplot <- ggplot(diffexpr, aes(x=HG_mean)) + geom_histogram(fill="firebrick") +
+  theme_classic() + 
+  theme(axis.line.x=element_blank(), 
+        axis.ticks.x=element_blank(), 
+        axis.text.x = element_blank(), 
+        axis.title.x = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        panel.background = element_blank(),
+        legend.title = element_blank(),
+        legend.position = c(0.75,0.85),
+        #legend.title = element_text(size = 5), 
+        legend.text  = element_text(size = 8),
+        legend.key.size = unit(0.5, "lines"),
+        legend.spacing = unit(0.3, "cm"),
+  ) + ylab("Density")
+
+yplot <- ggplot(diffexpr, aes(x=CG_mean)) + geom_histogram(fill="dodgerblue") +
+  theme_classic() +
+  theme(axis.line.y=element_blank(),  
+        axis.ticks.y=element_blank(), 
+        axis.text.y = element_blank(), 
+        axis.title.y=element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        panel.background = element_blank(),
+        legend.title = element_blank(),
+        legend.position = c(0.7,0.8),
+        #legend.title = element_text(size = 5), 
+        legend.text  = element_text(size = 8),
+        legend.key.size = unit(0.5, "lines"),
+        legend.spacing = unit(0.3, "cm"),
+  ) + ylab("Density") +
+  rotate()
+
+white <- ggplot() + theme_void()
+
+pc <- egg::ggarrange(xplot, white, p, yplot, 
+                     widths=c(5,2),heights = c(2,5),padding=unit(0,"line"))
+ggsave('Diagonal_volcano.png',pc,dpi = 300,bg = 'white',width = 8,height = 7)
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="火山图绘制–形式七"><a href="#火山图绘制–形式七" class="headerlink" title="火山图绘制–形式七"></a>火山图绘制–形式七</h4><p><strong>效果如下</strong></p>
+<p><img src="https://s2.loli.net/2023/12/13/1t7GRAJfmPdeYST.png" alt="volcano6.png"></p>
+<p><strong>相关代码</strong></p>
+<pre class="line-numbers language-R"><code class="language-R">######## 多分组多条件 火山图
+library(scRNAtoolVis)
+rm(list = ls())
+
+DEG1 <- read.table('PN-Normal_DEGs.xls',row.names = 1,header = T,sep = '\t')
+DEG1$cluster <- 'PN-Normal'
+
+DEG2 <- read.table('Psoriasis-Normal_DEGs.xls',row.names = 1,header = T,sep = '\t')
+DEG2$cluster <- 'Psoriasis-Normal'
+
+DEG3 <- read.table('Psoriasis-PN_DEGs.xls',row.names = 1,header = T,sep = '\t')
+DEG3$cluster <- 'Psoriasis-PN'
+
+# rbind
+markers <- rbind(DEG1,DEG2,DEG3)
+colnames(markers)[1] <- 'avg_log2FC'
+colnames(markers)[4] <- 'p_val'
+colnames(markers)[5] <- 'p_val_adj'
+
+library(paletteer) 
+col <- paletteer_d("khroma::light")
+
+# change aes color type
+jjVolcano(diffData = markers,
+          log2FC.cutoff = 0.5,
+          tile.col = col[3:5],
+          pSize = 2,
+          #col.type = "adjustP",
+          size  = 3,
+          fontface = 'italic',
+          legend.position = c(0.1,0.9),
+          topGeneN = 5)
+ggsave('volcano6.png',dpi = 300,bg = 'white',width = 8,height = 7)
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="火山图绘制–形式八"><a href="#火山图绘制–形式八" class="headerlink" title="火山图绘制–形式八"></a>火山图绘制–形式八</h4><p><strong>效果如下</strong></p>
+<p><img src="https://s2.loli.net/2023/12/13/OnrVGZqMN9oD4W3.png" alt="volcano7.png"></p>
+<p><strong>相关代码</strong></p>
+<pre class="line-numbers language-R"><code class="language-R">######### 自定义函数 ######### 
+color.pals = c("#DC143C","#0000FF","#20B2AA","#FFA500","#9370DB","#98FB98","#F08080","#1E90FF","#7CFC00","#FFFF00","#808000","#FF00FF","#FA8072","#7B68EE","#9400D3","#800080","#A0522D","#D2B48C","#D2691E","#87CEEB","#40E0D0","#5F9EA0","#FF1493","#0000CD","#008B8B","#FFE4B5","#8A2BE2","#228B22","#E9967A","#4682B4","#32CD32","#F0E68C","#FFFFE0","#EE82EE","#FF6347","#6A5ACD","#9932CC","#8B008B","#8B4513","#DEB887")
+
+
+#
+#' multi volcano plot for scRNA-seq
+#' @version 0.2 change legend order
+#' @version 0.3 add max_overlaps for annotation
+#'
+#' @param dat Seurat FindAllMarkers returns, must set only.pos = F;
+#' @param color.arr color list, default same as Seurat
+#' @param onlyAnnotateUp only annote gene symbols for up genes
+#' @param log2Foldchang threshold for annotation
+#' @param adjp  threshold for annotation
+#' @param top_marker gene number for annotation
+#' @param max_overlaps annotation label overlapping
+#'
+#' @return ggplot2 obj
+#' @export
+#'
+#' @examples
+multiVolcanoPlot = function(dat, color.arr=NULL, onlyAnnotateUp=T,
+                            log2Foldchang=0.58, adjp=0.05, top_marker=5, 
+                            max_overlaps=10, width=0.9){
+  library(dplyr)
+  library(ggrepel)
+  # set default color list
+  if(is.null(color.arr)){
+    len = length(unique(dat$cluster))
+    color.arr=scales::hue_pal()(len)
+  }
+  
+  dat.plot <- dat %>% mutate(
+    "significance"=case_when(p_val_adj < adjp & avg_log2FC >= log2Foldchang  ~ 'Up',
+                             p_val_adj < adjp & avg_log2FC <= -log2Foldchang  ~ 'Down',
+                             TRUE ~ 'None'))
+  tbl = table(dat.plot$significance)
+  print( tbl )
+  background.dat <- data.frame(
+    dat.plot %>% group_by(cluster) %>% filter(avg_log2FC>0) %>%
+      summarise("y.localup"=max(avg_log2FC)),
+    dat.plot %>% group_by(cluster) %>% filter(avg_log2FC<=0) %>%
+      summarise("y.localdown"=min(avg_log2FC)),
+    x.local=seq(1:length(unique(dat.plot$cluster)))
+  ) %>% select(-cluster.1)
+  #names(background.dat)
+  #head(background.dat)
+  #dim(background.dat)
+  
+  #
+  x.number <- background.dat %>% select(cluster, x.local)
+  dat.plot <- dat.plot%>% left_join(x.number,by = "cluster")
+  #names(dat.plot)
+  #head(dat.plot)
+  
+  #selecting top-up and top-down proteins
+  dat.marked.up <- dat.plot %>% filter(significance=="Up") %>%
+    group_by(cluster) %>% arrange(-avg_log2FC) %>%
+    top_n(top_marker,abs(avg_log2FC))
+  dat.marked.down <- dat.plot %>% filter(significance=="Down") %>%
+    group_by(cluster) %>% arrange(avg_log2FC) %>%
+    top_n(top_marker,abs(avg_log2FC))
+  dat.marked <- dat.marked.up %>% bind_rows(dat.marked.down)
+  #referring group information data
+  dat.infor <- background.dat %>%
+    mutate("y.infor"=rep(0,length(cluster)))
+  #names(dat.infor)
+  #dim(dat.infor)
+  #head(dat.infor)
+  
+  ##plotting:
+  #setting color by loading local color schemes
+  vol.plot <- ggplot()+
+    # background
+    geom_col(background.dat,mapping=aes(x.local, y.localup),
+             fill="grey80", alpha=0.2, width=0.9, just = 0.5)+
+    geom_col(background.dat,mapping=aes(x.local,y.localdown),
+             fill="grey80", alpha=0.2, width=0.9, just = 0.5)+
+    # point plot
+    geom_jitter(dat.plot, mapping=aes(x.local, avg_log2FC, #x= should be number, Not string or factor
+                                      color=significance),
+                size=0.8, width = 0.4, alpha= 1)+
+    scale_color_manual(name="significance", 
+                       breaks = c('Up', 'None', 'Down'),
+                       values = c("#d56e5e","#cccccc", "#5390b5")) + #set color for: Down None   Up
+    geom_tile(dat.infor, mapping=aes(x.local, y.infor), #x axis color box
+              height = log2Foldchang*1.3,
+              fill = color.arr[1:length(unique(dat.plot$cluster))],
+              alpha = 0.5,
+              width=width) +
+    labs(x=NULL,y="log2 Fold change")+
+    geom_text(dat.infor, mapping=aes(x.local,y.infor,label=cluster))+
+    # Down is not recommend, not meaningful, hard to explain; so prefer dat.marked.up to dat.marked
+    ggrepel::geom_label_repel(data=if(onlyAnnotateUp) dat.marked.up else dat.marked, #gene symbol, of up group default
+                              mapping=aes(x=x.local, y=avg_log2FC, label=gene),
+                              force = 2, #size=2,
+                              max.overlaps = max_overlaps,
+                              label.size = 0, #no border
+                              fill="#00000000", #box fill color
+                              seed = 233,
+                              min.segment.length = 0,
+                              force_pull = 2,
+                              box.padding = 0.1,
+                              segment.linetype = 3,
+                              #segment.color = 'black',
+                              #segment.alpha = 0.5,
+                              #direction = "x", #line direction
+                              hjust = 0.5)+
+    annotate("text", x=1.5, y=max(background.dat$y.localup)+1,
+             label=paste0("|log2FC|>=", log2Foldchang, " & FDR<", adjp))+
+    theme_classic(base_size = 12)+
+    
+    theme(
+      axis.title = element_text(size = 13, color = "black"),
+      axis.text = element_text(size = 15, color = "black"),
+      axis.line.y = element_line(color = "black", size = 0.8),
+      #
+      axis.line.x = element_blank(), #no x axis line
+      axis.ticks.x = element_blank(), #no x axis ticks
+      axis.title.x = element_blank(), #
+      axis.text.x = element_blank(),
+      #
+      legend.spacing.x = unit(0.1,'cm'),
+      legend.key.width = unit(0.5,'cm'),
+      legend.key.height = unit(0.5,'cm'),
+      legend.background = element_blank(),
+      legend.box = "horizontal",
+      legend.position = c(0.13, 0.77),legend.justification = c(1,0)
+    )+
+    guides( #color = guide_legend( override.aes = list(size=5) ), #legend circle size
+      color=guide_legend( override.aes = list(size=5), title="Change")
+    )
+  #guides(fill=guide_legend(title="Change"))+ #change legend title
+  vol.plot
+}
+
+## 调用自定义函数绘图
+multiVolcanoPlot(markers,log2Foldchang = 0.5,adjp = 0.05,color.arr = col)
+# multiVolcanoPlot(scObj.markers.time, onlyAnnotateUp = F)
+ggsave('volcano7.png',dpi = 300,bg = 'white',width = 8,height = 7)
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<blockquote>
+<p><strong>最后，如果项目和教程对你有所帮助或者你看见了还算比较喜欢，欢迎给我<code>star</code>，谢谢您！</strong></p>
+</blockquote>
+
+            </div>
+            <hr/>
+
+            
+
+            <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+
+<div id="article-share">
+    
+    <div class="social-share" data-disabled="qzone" data-wechat-qrcode-helper="<p>微信里点“发现”->“扫一扫”二维码便可查看分享。</p>"></div>
+    
+</div>
+
+<script src="/libs/share/js/social-share.min.js"></script>
+
+            
+            
+            
+            <div class="reprint1">
+                <p>
+                    <span class="reprint1-tip">
+                        <i class="fa fa-exclamation-circle"></i>&nbsp;&nbsp;转载请注明:
+                    </span>
+                    <a href="https://zhou-1314.github.io" class="b-link-green">ZhouweigeBlog</a>
+                    <i class="fa fa-angle-right fa-lg fa-fw text-color"></i>
+                    <a href="/2023/12/13/learn-volcano/" class="b-link-green">文献美图汇总--火山图</a>
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fa fa-dot-circle-o"></i>&nbsp;本篇
+            </div>
+            <div class="card">
+                <a href="/2023/12/13/learn-volcano/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/3.jpg" class="responsive-img" alt="文献美图汇总--火山图">
+                        
+                        <span class="card-title">文献美图汇总--火山图</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            火山图是数据可视化中最重要的一种展示形式之一，本篇blog拟汇总当前最流行最美观一些火山图绘制方法。同时也给自己开一个新坑，就是（争取）每日都更新一种图形绘制形式，方便以后自己快速查询相关的绘图代码，也便于大家相互学习。
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2023-12-13
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fa fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/R-visualization/" class="post-category" target="_blank">
+                                    R visualization
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Volcano-plot/" target="_blank">
+                        <span class="chip bg-color">Volcano plot</span>
+                    </a>
+                    
+                    <a href="/tags/ggplot2/" target="_blank">
+                        <span class="chip bg-color">ggplot2</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fa fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2023/12/01/learn-git/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/23.jpg" class="responsive-img" alt="学习Git使用">
+                        
+                        <span class="card-title">学习Git使用</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            Git是目前世界上最先进的分布式版本控制系统，这篇blog将系统介绍它的一些常用命令，方便自己以后的翻阅以及查询。
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2023-12-01
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fa fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E7%BC%96%E7%A8%8B%E5%B7%A5%E5%85%B7%E5%AD%A6%E4%B9%A0/" class="post-category" target="_blank">
+                                    编程工具学习
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Git/" target="_blank">
+                        <span class="chip bg-color">Git</span>
+                    </a>
+                    
+                    <a href="/tags/Tips/" target="_blank">
+                        <span class="chip bg-color">Tips</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+</div>
+
+
+<script>
+    $('#articleContent').on('copy', function (e) {
+        // IE8 or earlier browser is 'undefined'
+        if (typeof window.getSelection === 'undefined') return;
+
+        var selection = window.getSelection();
+        // if the selection is short let's not annoy our users.
+        if (('' + selection).length < Number.parseInt('120')) {
+            return;
+        }
+
+        // create a div outside of the visible area and fill it with the selected text.
+        var bodyElement = document.getElementsByTagName('body')[0];
+        var newdiv = document.createElement('div');
+        newdiv.style.position = 'absolute';
+        newdiv.style.left = '-99999px';
+        bodyElement.appendChild(newdiv);
+        newdiv.appendChild(selection.getRangeAt(0).cloneContents());
+
+        // we need a <pre> tag workaround.
+        // otherwise the text inside "pre" loses all the line breaks!
+        if (selection.getRangeAt(0).commonAncestorContainer.nodeName === 'PRE') {
+            newdiv.innerHTML = "<pre>" + newdiv.innerHTML + "</pre>";
+        }
+
+        var url = document.location.href;
+        newdiv.innerHTML += '<br />'
+            + '来源: ZhouweigeBlog<br />'
+            + '作者: Kevin_Hhui<br />'
+            + '链接: <a href="' + url + '">' + url + '</a><br />'
+            + '本文章著作权归作者所有，任何形式的转载都请注明出处。';
+
+        selection.selectAllChildren(newdiv);
+        window.setTimeout(function () {bodyElement.removeChild(newdiv);}, 200);
+    });
+</script>
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget">
+            <div class="toc-title"><i class="fa fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fa fa-list"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            // headingsOffset: -205,
+            headingSelector: 'h1, h2, h3, h4, h5'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h1, h2, h3, h4, h5').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).slideUp(500);
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).slideDown(500);
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+    
+
+</main>
+
+
+<script src="https://cdn.bootcss.com/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script>
+    MathJax.Hub.Config({
+        tex2jax: {inlineMath: [['$', '$'], ['\(', '\)']]}
+    });
+</script>
+
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
+        <footer class="page-footer bg-color">
+    <div class="container row center-align">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&copy; 2023 Kevin_Hhui. 
+
+            <br>
+            <span id="sitetime"></span><span class="my-face">ღゝ◡╹)ノ♡</span>
+            <br>
+
+            
+
+            
+                    
+                        <span id="busuanzi_container_site_pv" style='display:none'></span>
+						<i class="fa fa-heart-o"></i>
+                        总访问量: <span id="busuanzi_value_site_pv" class="white-color"></span>
+                    
+        
+                    
+                        <span id="busuanzi_container_site_uv" style='display:none'></span>
+                        人次&nbsp; | &nbsp;访客人数: <span id="busuanzi_value_site_uv" class="white-color"></span> 人
+                    
+    
+            
+
+            
+                &nbsp; | &nbsp;字数统计:&nbsp;
+                <span class="white-color">4.6k</span> 字
+            
+
+            
+            <br>
+
+        </div>
+
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/zhou-1314" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fa fa-github"></i>
+    </a>
+
+
+ 
+    <a href="https://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=12133085@mail.sustech.edu.cn" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fa fa-envelope-open"></i>
+    </a>
+
+
+
+
+    <a href="https://zhihu.com/people/zhouweige" class="tooltipped" target="_blank" data-tooltip="访问我的知乎" data-position="top" data-delay="50">
+        <i class="fa fa-inverse">知</i>
+    </a>
+
+
+
+    <a href="http://wpa.qq.com/msgrd?v=3&uin=1364569514&site=qq&menu=yes" class="tooltipped" target="_blank" data-tooltip="访问我的QQ空间" data-position="top" data-delay="50">
+        <i class="fa fa-qq"></i>
+    </a>
+
+
+
+    <a href="/atom.xml" class="tooltipped" target="_blank" data-tooltip="RSS 订阅" data-position="top" data-delay="50">
+        <i class="fa fa-rss"></i>
+    </a>
+</div>
+
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+<script language=javascript>
+    function siteTime() {
+        window.setTimeout("siteTime()", 1000);
+        var seconds = 1000;
+        var minutes = seconds * 60;
+        var hours = minutes * 60;
+        var days = hours * 24;
+        var years = days * 365;
+        var today = new Date();
+        var todayYear = today.getFullYear();
+        var todayMonth = today.getMonth() + 1;
+        var todayDate = today.getDate();
+        var todayHour = today.getHours();
+        var todayMinute = today.getMinutes();
+        var todaySecond = today.getSeconds();
+
+        /* Date.UTC() -- 返回date对象距世界标准时间(UTC)1970年1月1日午夜之间的毫秒数(时间戳)
+        year - 作为date对象的年份，为4位年份值
+        month - 0-11之间的整数，做为date对象的月份
+        day - 1-31之间的整数，做为date对象的天数
+        hours - 0(午夜24点)-23之间的整数，做为date对象的小时数
+        minutes - 0-59之间的整数，做为date对象的分钟数
+        seconds - 0-59之间的整数，做为date对象的秒数
+        microseconds - 0-999之间的整数，做为date对象的毫秒数 */
+
+        var t1 = Date.UTC(2023, 11, 25, 00, 00, 00); //北京时间2023-11-25 00:00:00
+        var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+        var diff = t2 - t1;
+        var diffYears = Math.floor(diff / years);
+        var diffDays = Math.floor((diff / days) - diffYears * 365);
+        var diffHours = Math.floor((diff - (diffYears * 365 + diffDays) * days) / hours);
+        var diffMinutes = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours) / minutes);
+        var diffSeconds = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours - diffMinutes *
+            minutes) / seconds);
+        document.getElementById("sitetime").innerHTML = "本站顺利运行 " + diffYears + " 年 " + diffDays + " 天 " + diffHours +
+            " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒" ;
+    } /*因为建站时间还没有一年，就将之注释掉了。需要的可以取消*/
+    siteTime();
+	
+	$(document).ready(function () {
+
+        var int = setInterval(fixCount, 50);  // 50ms周期检测函数
+        var pvcountOffset = 8000;  // 初始化首次数据
+        var uvcountOffset = 2000;
+
+        function fixCount() {
+            if (document.getElementById("busuanzi_container_site_pv").style.display != "none") {
+                $("#busuanzi_value_site_pv").html(parseInt($("#busuanzi_value_site_pv").html()) + pvcountOffset);
+                clearInterval(int);
+            }
+            if ($("#busuanzi_container_site_pv").css("display") != "none") {
+                $("#busuanzi_value_site_uv").html(parseInt($("#busuanzi_value_site_uv").html()) + uvcountOffset); // 加上初始数据 
+                clearInterval(int); // 停止检测
+            }
+        }
+    });
+</script>
+
+
+
+
+
+
+        <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fa fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script src="/js/search.js"></script>
+<script type="text/javascript">
+$(function () {
+    searchFunc("/" + "search.xml", 'searchInput', 'searchResult');
+});
+</script>
+        <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fa fa-angle-up"></i>
+    </a>
+</div>
+
+
+        <script src="https://cdn.bootcss.com/materialize/1.0.0/js/materialize.min.js"></script>
+        <script src="https://cdn.bootcss.com/masonry/4.2.2/masonry.pkgd.min.js"></script>
+        <script src="https://cdn.bootcss.com/aos/3.0.0-beta.6/aos.js"></script>
+        <script src="https://cdn.bootcss.com/scrollprogress/3.0.2/scrollProgress.min.js"></script>
+        <script src="https://cdn.bootcss.com/lightgallery/1.6.12/js/lightgallery-all.min.js"></script>
+        <script src="/js/matery.js"></script>
+
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+
+        
+            <script src="/libs/others/clicklove.js"></script>
+        
+
+        
+            <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        
+
+        <!-- 洪卫 shw2018 add 2019.08.28 -->
+        <script type="text/javascript">
+            var OriginTitile = document.title,
+                st;
+            document.addEventListener("visibilitychange", function () {
+                document.hidden ? (document.title = "看不见我🙈~看不见我🙈~", clearTimeout(st)) : (document.title =
+                    "(๑•̀ㅂ•́) ✧被发现了～", st = setTimeout(function () {
+                        document.title = OriginTitile
+                    }, 3e3))
+            })
+        </script>
+
+        <!-- 鼠标点击烟花爆炸效果  洪卫 shw2018 add 2019.09.09 -->
+        
+
+        <!-- 背景雪花飘落特效洪卫 shw2018 add 2019.09.10 -->
+        
+            <script type="text/javascript">
+            //只在桌面版网页启用特效
+            var windowWidth = $(window).width();
+            if (windowWidth > 768) {
+                document.write('<script type="text/javascript" src="/js/sakura.js"><\/script>');
+            }
+            </script>
+        
+
+        <!-- 鼠标点击文字特效 洪卫 shw2018 add 2019.09.10-->
+        
+
+        <!-- 背景雪花飘落特效 洪卫 shw2018 add 2019.09.10 -->
+        
+            <script type="text/javascript">
+                var windowWidth = $(window).width();
+                if (windowWidth > 768) {
+                    document.write('<script type="text/javascript" src="/js/xuehuapiaoluo.js"><\/script>');
+                }
+            </script>
+        
+
+        <!-- 在线聊天工具  洪卫 shw2018 add 2019.09.11 -->
+        
+
+        <!-- 背景 canvas-nest  洪卫 shw 2018  add 2019.09.15-->
+        
+
+        <!-- 背景静止彩带  洪卫 shw 2018  add 2019.09.15-->
+        
+
+        <!-- 背景动态彩带 洪卫 shw 2018  add 2019.09.15-->
+        
+            <script type="text/javascript">
+            var windowWidth = $(window).width();
+            if (windowWidth > 992) {
+                document.write('<script type="text/javascript" src="/libs/background/ribbon-dynamic.js"><\/script>');
+            }
+            </script>
+        
+
+    <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/shizuku.model.json"},"display":{"position":"left","width":150,"height":200},"mobile":{"show":false},"react":{"opacity":0.7}});</script></body>
+</html>
