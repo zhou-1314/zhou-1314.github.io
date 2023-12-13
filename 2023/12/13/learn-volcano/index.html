@@ -698,14 +698,14 @@ setwd(&#34;C:/Users/Kevin/Desktop/R_Visualization/01.火山图&#34;)
                     
                     <div class="info-break-policy">
                         <i class="fa fa-file-word-o fa-fw"></i>文章字数:&nbsp;&nbsp;
-                        558
+                        3.8k
                     </div>
                     
 
                     
                     <div class="info-break-policy">
                         <i class="fa fa-clock-o fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                        3 分
+                        21 分
                     </div>
                     
                 
@@ -725,680 +725,680 @@ setwd(&#34;C:/Users/Kevin/Desktop/R_Visualization/01.火山图&#34;)
                 <h4 id="火山图绘制–形式一"><a href="#火山图绘制–形式一" class="headerlink" title="火山图绘制–形式一"></a>火山图绘制–形式一</h4><p><strong>效果如下</strong></p>
 <p><img src="https://s2.loli.net/2023/12/13/ZQWTw4CVefDylxR.png" alt="volcano1.png"></p>
 <p><strong>相关代码：</strong></p>
-<pre class="line-numbers language-R"><code class="language-R">library(ggplot2)
+<pre class="line-numbers language-r"><code class="language-r">library<span class="token punctuation">(</span>ggplot2<span class="token punctuation">)</span>
 
-setwd("C:/Users/Kevin/Desktop/R_Visualization/01.火山图")
+setwd<span class="token punctuation">(</span><span class="token string">"C:/Users/Kevin/Desktop/R_Visualization/01.火山图"</span><span class="token punctuation">)</span>
 
-########## 普通火山图 ############ 
-rm(list = ls())
+<span class="token comment" spellcheck="true">########## 普通火山图 ############ </span>
+rm<span class="token punctuation">(</span>list <span class="token operator">=</span> ls<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
 
-df <- read.table('diff_DEseq2.xls', header = TRUE, sep = "\t",row.names = 1)
-head(df)
+df <span class="token operator">&lt;-</span> read.table<span class="token punctuation">(</span><span class="token string">'diff_DEseq2.xls'</span><span class="token punctuation">,</span> header <span class="token operator">=</span> <span class="token boolean">TRUE</span><span class="token punctuation">,</span> sep <span class="token operator">=</span> <span class="token string">"\t"</span><span class="token punctuation">,</span>row.names <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">)</span>
+head<span class="token punctuation">(</span>df<span class="token punctuation">)</span>
 
-#对差异基因的p值从小到大排序
-df <- df[order(df$padj),]
-up.genes = head(df$gene[which(df$change == "up")],5)
-##低表达的基因中，选择adj.P.Val值最小的10个
-down.genes = head(df$gene[which(df$change == "down")],5)
+<span class="token comment" spellcheck="true">#对差异基因的p值从小到大排序</span>
+df <span class="token operator">&lt;-</span> df<span class="token punctuation">[</span>order<span class="token punctuation">(</span>df<span class="token operator">$</span>padj<span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token punctuation">]</span>
+up.genes <span class="token operator">=</span> head<span class="token punctuation">(</span>df<span class="token operator">$</span>gene<span class="token punctuation">[</span>which<span class="token punctuation">(</span>df<span class="token operator">$</span>change <span class="token operator">==</span> <span class="token string">"up"</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">,</span><span class="token number">5</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true">##低表达的基因中，选择adj.P.Val值最小的10个</span>
+down.genes <span class="token operator">=</span> head<span class="token punctuation">(</span>df<span class="token operator">$</span>gene<span class="token punctuation">[</span>which<span class="token punctuation">(</span>df<span class="token operator">$</span>change <span class="token operator">==</span> <span class="token string">"down"</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">,</span><span class="token number">5</span><span class="token punctuation">)</span>
 
-sig_genes <- df %>% filter(gene %in% c(up.genes, down.genes))
-up_genes <- df %>% filter(gene %in% up.genes)
-down_genes <- df %>% filter(gene %in% down.genes)
+sig_genes <span class="token operator">&lt;-</span> df <span class="token percent-operator operator">%>%</span> filter<span class="token punctuation">(</span>gene <span class="token percent-operator operator">%in%</span> c<span class="token punctuation">(</span>up.genes<span class="token punctuation">,</span> down.genes<span class="token punctuation">)</span><span class="token punctuation">)</span>
+up_genes <span class="token operator">&lt;-</span> df <span class="token percent-operator operator">%>%</span> filter<span class="token punctuation">(</span>gene <span class="token percent-operator operator">%in%</span> up.genes<span class="token punctuation">)</span>
+down_genes <span class="token operator">&lt;-</span> df <span class="token percent-operator operator">%>%</span> filter<span class="token punctuation">(</span>gene <span class="token percent-operator operator">%in%</span> down.genes<span class="token punctuation">)</span>
 
-table(df$change)
+table<span class="token punctuation">(</span>df<span class="token operator">$</span>change<span class="token punctuation">)</span>
 
-df$change <- factor(df$change, levels = c('up','down','stable'))
-library(ggrepel)
-df %>%
-  ggplot(aes(x = log2FoldChange, y = -log10(padj))) +
-  # 绘制基础散点图，并根据 gene_type 对点的颜色进行分类，设置点的透明度 (alpha=0.6)，形状 (shape = 16)，大小 (size = 1)
-  geom_point(aes(color = change), alpha = 0.6, shape = 16, size = 2) +
-  # 从 up_genes 数据框中绘制特定形状的散点图，填充颜色为红色，边框颜色为黑色，大小为 2
-  geom_point(data = up_genes, shape = 21, size = 3, fill = "#C70E7BFF", colour = "#C70E7BFF") +
-  # 从 down_genes 数据框中绘制特定形状的散点图，填充颜色为钢蓝色，边框颜色为黑色，大小为 2
-  geom_point(data = down_genes, shape = 21, size = 3, fill = "#007BC3FF", colour = "#007BC3FF") +
-  # 添加水平虚线，y 轴截距为 -log10(0.05),表示显著性阈值为 0.05
-  geom_hline(yintercept = -log10(0.05), linetype = "dashed") +
-  # 添加垂直虚线，x 轴截距为 log2(0.5) 和 log2(2)，表示折叠变化范围为 0.5 到 2
-  geom_vline(xintercept = c(log2(0.5),log2(2)), linetype = "dashed") +
-  # 在图中显示 sig_genes 数据框中基因符号的标签
-  geom_label_repel(data = sig_genes, aes(label = gene), force = 2, nudge_y = 1) +
-  # 设置 gene_type 对应的颜色映射
-  scale_color_manual(values = c("up" = "#FC6882FF", "down" = "#54BCD1FF", "stable" = "grey"),
-                     labels = c(  "up 559", 'down 582', 'stable 19752')) +
-  # 设置 x 轴的刻度和范围
-  # scale_x_continuous(breaks = c(seq(-10, 10, 2)), limits = c(-10, 10)) +
-  # 设置 x 轴和 y 轴的标签
-  labs(x = "log2(fold change)", y = "-log10(adjusted P-value)", colour = "Expression change") +
-  # 调整图例外观，将图例大小设为 5，位置设置为右上角
-  guides(color = guide_legend(override.aes = list(size = 5))) +
-  theme_bw() + #  # 设置图的主题为白色背景
-  # 设置图的主题样式，包括边框、网格线、背景等
-  theme(panel.border = element_rect(colour = "black", fill = NA, size = 0.5),
-        panel.grid.minor = element_blank(),
-        panel.background = element_blank(),
-        plot.background = element_blank(),
-        axis.title = element_text( color = "black", size = 10),
-        axis.text = element_text(color = "black", size = 9),
-        legend.background = element_blank(),
-        legend.title = element_text( color = "black", size = 10),
-        legend.text = element_text( color = "black", size = 9),
-        legend.spacing.x = unit(0, "cm"),
-        legend.position = c(0.88, 0.89)  # 设置图例位置为右上角
-  )
+df<span class="token operator">$</span>change <span class="token operator">&lt;-</span> factor<span class="token punctuation">(</span>df<span class="token operator">$</span>change<span class="token punctuation">,</span> levels <span class="token operator">=</span> c<span class="token punctuation">(</span><span class="token string">'up'</span><span class="token punctuation">,</span><span class="token string">'down'</span><span class="token punctuation">,</span><span class="token string">'stable'</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+library<span class="token punctuation">(</span>ggrepel<span class="token punctuation">)</span>
+df <span class="token percent-operator operator">%>%</span>
+  ggplot<span class="token punctuation">(</span>aes<span class="token punctuation">(</span>x <span class="token operator">=</span> log2FoldChange<span class="token punctuation">,</span> y <span class="token operator">=</span> <span class="token operator">-</span>log10<span class="token punctuation">(</span>padj<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">+</span>
+  <span class="token comment" spellcheck="true"># 绘制基础散点图，并根据 gene_type 对点的颜色进行分类，设置点的透明度 (alpha=0.6)，形状 (shape = 16)，大小 (size = 1)</span>
+  geom_point<span class="token punctuation">(</span>aes<span class="token punctuation">(</span>color <span class="token operator">=</span> change<span class="token punctuation">)</span><span class="token punctuation">,</span> alpha <span class="token operator">=</span> <span class="token number">0.6</span><span class="token punctuation">,</span> shape <span class="token operator">=</span> <span class="token number">16</span><span class="token punctuation">,</span> size <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">)</span> <span class="token operator">+</span>
+  <span class="token comment" spellcheck="true"># 从 up_genes 数据框中绘制特定形状的散点图，填充颜色为红色，边框颜色为黑色，大小为 2</span>
+  geom_point<span class="token punctuation">(</span>data <span class="token operator">=</span> up_genes<span class="token punctuation">,</span> shape <span class="token operator">=</span> <span class="token number">21</span><span class="token punctuation">,</span> size <span class="token operator">=</span> <span class="token number">3</span><span class="token punctuation">,</span> fill <span class="token operator">=</span> "<span class="token comment" spellcheck="true">#C70E7BFF", colour = "#C70E7BFF") +</span>
+  <span class="token comment" spellcheck="true"># 从 down_genes 数据框中绘制特定形状的散点图，填充颜色为钢蓝色，边框颜色为黑色，大小为 2</span>
+  geom_point<span class="token punctuation">(</span>data <span class="token operator">=</span> down_genes<span class="token punctuation">,</span> shape <span class="token operator">=</span> <span class="token number">21</span><span class="token punctuation">,</span> size <span class="token operator">=</span> <span class="token number">3</span><span class="token punctuation">,</span> fill <span class="token operator">=</span> "<span class="token comment" spellcheck="true">#007BC3FF", colour = "#007BC3FF") +</span>
+  <span class="token comment" spellcheck="true"># 添加水平虚线，y 轴截距为 -log10(0.05),表示显著性阈值为 0.05</span>
+  geom_hline<span class="token punctuation">(</span>yintercept <span class="token operator">=</span> <span class="token operator">-</span>log10<span class="token punctuation">(</span><span class="token number">0.05</span><span class="token punctuation">)</span><span class="token punctuation">,</span> linetype <span class="token operator">=</span> <span class="token string">"dashed"</span><span class="token punctuation">)</span> <span class="token operator">+</span>
+  <span class="token comment" spellcheck="true"># 添加垂直虚线，x 轴截距为 log2(0.5) 和 log2(2)，表示折叠变化范围为 0.5 到 2</span>
+  geom_vline<span class="token punctuation">(</span>xintercept <span class="token operator">=</span> c<span class="token punctuation">(</span>log2<span class="token punctuation">(</span><span class="token number">0.5</span><span class="token punctuation">)</span><span class="token punctuation">,</span>log2<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span> linetype <span class="token operator">=</span> <span class="token string">"dashed"</span><span class="token punctuation">)</span> <span class="token operator">+</span>
+  <span class="token comment" spellcheck="true"># 在图中显示 sig_genes 数据框中基因符号的标签</span>
+  geom_label_repel<span class="token punctuation">(</span>data <span class="token operator">=</span> sig_genes<span class="token punctuation">,</span> aes<span class="token punctuation">(</span>label <span class="token operator">=</span> gene<span class="token punctuation">)</span><span class="token punctuation">,</span> force <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">,</span> nudge_y <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">+</span>
+  <span class="token comment" spellcheck="true"># 设置 gene_type 对应的颜色映射</span>
+  scale_color_manual<span class="token punctuation">(</span>values <span class="token operator">=</span> c<span class="token punctuation">(</span><span class="token string">"up"</span> <span class="token operator">=</span> "<span class="token comment" spellcheck="true">#FC6882FF", "down" = "#54BCD1FF", "stable" = "grey"),</span>
+                     labels <span class="token operator">=</span> c<span class="token punctuation">(</span>  <span class="token string">"up 559"</span><span class="token punctuation">,</span> <span class="token string">'down 582'</span><span class="token punctuation">,</span> <span class="token string">'stable 19752'</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">+</span>
+  <span class="token comment" spellcheck="true"># 设置 x 轴的刻度和范围</span>
+  <span class="token comment" spellcheck="true"># scale_x_continuous(breaks = c(seq(-10, 10, 2)), limits = c(-10, 10)) +</span>
+  <span class="token comment" spellcheck="true"># 设置 x 轴和 y 轴的标签</span>
+  labs<span class="token punctuation">(</span>x <span class="token operator">=</span> <span class="token string">"log2(fold change)"</span><span class="token punctuation">,</span> y <span class="token operator">=</span> <span class="token string">"-log10(adjusted P-value)"</span><span class="token punctuation">,</span> colour <span class="token operator">=</span> <span class="token string">"Expression change"</span><span class="token punctuation">)</span> <span class="token operator">+</span>
+  <span class="token comment" spellcheck="true"># 调整图例外观，将图例大小设为 5，位置设置为右上角</span>
+  guides<span class="token punctuation">(</span>color <span class="token operator">=</span> guide_legend<span class="token punctuation">(</span>override.aes <span class="token operator">=</span> list<span class="token punctuation">(</span>size <span class="token operator">=</span> <span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">+</span>
+  theme_bw<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token comment" spellcheck="true">#  # 设置图的主题为白色背景</span>
+  <span class="token comment" spellcheck="true"># 设置图的主题样式，包括边框、网格线、背景等</span>
+  theme<span class="token punctuation">(</span>panel.border <span class="token operator">=</span> element_rect<span class="token punctuation">(</span>colour <span class="token operator">=</span> <span class="token string">"black"</span><span class="token punctuation">,</span> fill <span class="token operator">=</span> <span class="token keyword">NA</span><span class="token punctuation">,</span> size <span class="token operator">=</span> <span class="token number">0.5</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        panel.grid.minor <span class="token operator">=</span> element_blank<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        panel.background <span class="token operator">=</span> element_blank<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        plot.background <span class="token operator">=</span> element_blank<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        axis.title <span class="token operator">=</span> element_text<span class="token punctuation">(</span> color <span class="token operator">=</span> <span class="token string">"black"</span><span class="token punctuation">,</span> size <span class="token operator">=</span> <span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        axis.text <span class="token operator">=</span> element_text<span class="token punctuation">(</span>color <span class="token operator">=</span> <span class="token string">"black"</span><span class="token punctuation">,</span> size <span class="token operator">=</span> <span class="token number">9</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        legend.background <span class="token operator">=</span> element_blank<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        legend.title <span class="token operator">=</span> element_text<span class="token punctuation">(</span> color <span class="token operator">=</span> <span class="token string">"black"</span><span class="token punctuation">,</span> size <span class="token operator">=</span> <span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        legend.text <span class="token operator">=</span> element_text<span class="token punctuation">(</span> color <span class="token operator">=</span> <span class="token string">"black"</span><span class="token punctuation">,</span> size <span class="token operator">=</span> <span class="token number">9</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        legend.spacing.x <span class="token operator">=</span> unit<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token string">"cm"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        legend.position <span class="token operator">=</span> c<span class="token punctuation">(</span><span class="token number">0.88</span><span class="token punctuation">,</span> <span class="token number">0.89</span><span class="token punctuation">)</span>  <span class="token comment" spellcheck="true"># 设置图例位置为右上角</span>
+  <span class="token punctuation">)</span>
 
-ggsave('volcano1.png',dpi = 300,bg = 'white',width = 8,height = 7)
+ggsave<span class="token punctuation">(</span><span class="token string">'volcano1.png'</span><span class="token punctuation">,</span>dpi <span class="token operator">=</span> <span class="token number">300</span><span class="token punctuation">,</span>bg <span class="token operator">=</span> <span class="token string">'white'</span><span class="token punctuation">,</span>width <span class="token operator">=</span> <span class="token number">8</span><span class="token punctuation">,</span>height <span class="token operator">=</span> <span class="token number">7</span><span class="token punctuation">)</span>
 <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <h4 id="火山图绘制–形式二"><a href="#火山图绘制–形式二" class="headerlink" title="火山图绘制–形式二"></a>火山图绘制–形式二</h4><p><strong>效果如下</strong></p>
 <p><img src="https://s2.loli.net/2023/12/13/PruAWCGfoE4QwSs.png" alt="volcano2.png"></p>
 <p><strong>相关代码</strong></p>
-<pre class="line-numbers language-R"><code class="language-R">########## 普通火山图2 ############ 
-rm(list = ls())
+<pre class="line-numbers language-r"><code class="language-r"><span class="token comment" spellcheck="true">########## 普通火山图2 ############ </span>
+rm<span class="token punctuation">(</span>list <span class="token operator">=</span> ls<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
 
-####----load R Package----####
-library(tidyverse)
-library(ggrepel)
-library(ggfun)
-library(grid)
+<span class="token comment" spellcheck="true">####----load R Package----####</span>
+library<span class="token punctuation">(</span>tidyverse<span class="token punctuation">)</span>
+library<span class="token punctuation">(</span>ggrepel<span class="token punctuation">)</span>
+library<span class="token punctuation">(</span>ggfun<span class="token punctuation">)</span>
+library<span class="token punctuation">(</span>grid<span class="token punctuation">)</span>
 
-####----load data----####
-df <- read.table('diff_DEseq2.xls', header = TRUE, sep = "\t",row.names = 1)
+<span class="token comment" spellcheck="true">####----load data----####</span>
+df <span class="token operator">&lt;-</span> read.table<span class="token punctuation">(</span><span class="token string">'diff_DEseq2.xls'</span><span class="token punctuation">,</span> header <span class="token operator">=</span> <span class="token boolean">TRUE</span><span class="token punctuation">,</span> sep <span class="token operator">=</span> <span class="token string">"\t"</span><span class="token punctuation">,</span>row.names <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">)</span>
 
-####----plot----####
-ggplot(data = df) + 
-  geom_point(aes(x = log2FoldChange, y = -log10(padj), 
-                 color = log2FoldChange,
-                 size = -log10(padj))) + 
-  geom_point(data =  df %>%
-               tidyr::drop_na() %>%
-               dplyr::filter(change != "stable") %>%
-               dplyr::arrange(desc(-log10(padj))) %>%
-               dplyr::slice(1:20),
-             aes(x = log2FoldChange, y = -log10(padj),
-                 # fill = log2FoldChange,
-                 size = -log10(padj)),
-             shape = 21, show.legend = F, color = "#000000") +
-  geom_text_repel(data =  df %>% 
-                    tidyr::drop_na() %>% 
-                    dplyr::filter(change != "stable") %>%
-                    dplyr::arrange(desc(-log10(padj))) %>%
-                    dplyr::slice(1:15) %>%
-                    dplyr::filter(change == "up"),
-                  aes(x = log2FoldChange, y = -log10(padj), label = gene),
-                  box.padding = 0.5,
-                  nudge_x = 0.5,
-                  nudge_y = 0.2,
-                  segment.curvature = -0.1,
-                  segment.ncp = 3,
-                  # segment.angle = 10,
-                  direction = "y", 
-                  hjust = "left"
-  ) + 
-  geom_text_repel(data =  df %>% 
-                    tidyr::drop_na() %>% 
-                    dplyr::filter(change != "stable") %>%
-                    dplyr::arrange(desc(-log10(padj))) %>%
-                    dplyr::slice(1:15) %>%
-                    dplyr::filter(change == "down"),
-                  aes(x = log2FoldChange, y = -log10(padj), label = gene),
-                  box.padding = 0.5,
-                  nudge_x = -0.2,
-                  nudge_y = 0.2,
-                  segment.curvature = -0.1,
-                  segment.ncp = 3,
-                  segment.angle = 20,
-                  direction = "y", 
-                  hjust = "right"
-  ) + 
-  scale_color_gradientn(colours = c("#3288bd", "#66c2a5","#ffffbf", "#f46d43", "#9e0142"),
-                        values = seq(0, 1, 0.2)) +
-  scale_fill_gradientn(colours = c("#3288bd", "#66c2a5","#ffffbf", "#f46d43", "#9e0142"),
-                       values = seq(0, 1, 0.2)) +
-  geom_vline(xintercept = c(-log2(1.5), log2(1.5)), linetype = 2) +
-  geom_hline(yintercept = -log10(0.05), linetype = 4) + 
-  scale_size(range = c(1,7)) + 
-  # ggtitle(label = "Volcano Plot",
-  #         subtitle = "volcano plot") + 
-  # xlim(c(-3, 3)) + 
-  # ylim(c(-1, 90)) + 
-  theme_bw() + 
-  theme(panel.grid = element_blank(),
-        legend.background = element_roundrect(color = "#808080", linetype = 1),
-        axis.text = element_text(size = 13, color = "#000000"),
-        axis.title = element_text(size = 15),
-        plot.title = element_text(hjust = 0.5),
-        plot.subtitle = element_text(hjust = 0.5)
-  ) + 
-  annotate(geom = "text", x = 2.5, y = 0.25, label = "p = 0.05", size = 5) + 
-  coord_cartesian(clip = "off") + 
-  annotation_custom(
-    grob = grid::segmentsGrob(
-      y0 = unit(-10, "pt"),
-      y1 = unit(-10, "pt"),
-      arrow = arrow(angle = 45, length = unit(.2, "cm"), ends = "first"),
-      gp = grid::gpar(lwd = 3, col = "#74add1")
-    ), 
-    xmin = range(df$log2FoldChange)[1]/10*9, 
-    xmax = range(df$log2FoldChange)[1]/10*4,
-    ymin = range(-log10(df$padj))[2]/10*9.5,
-    ymax = range(-log10(df$padj))[2]/10*9.5
-  ) +
-  annotation_custom(
-    grob = grid::textGrob(
-      label = "Down",
-      gp = grid::gpar(col = "#74add1")
-    ),
-    xmin = range(df$log2FoldChange)[1]/10*9, 
-    xmax = range(df$log2FoldChange)[1]/10*4,
-    ymin = range(-log10(df$padj))[2]/10*9.5,
-    ymax = range(-log10(df$padj))[2]/10*9.5
-  ) +
-  annotation_custom(
-    grob = grid::segmentsGrob(
-      y0 = unit(-10, "pt"),
-      y1 = unit(-10, "pt"),
-      arrow = arrow(angle = 45, length = unit(.2, "cm"), ends = "last"),
-      gp = grid::gpar(lwd = 3, col = "#d73027")
-    ), 
-    xmin = range(df$log2FoldChange)[2]/10*9, 
-    xmax = range(df$log2FoldChange)[2]/10*4,
-    ymin = range(-log10(df$padj))[2]/10*9.5,
-    ymax = range(-log10(df$padj))[2]/10*9.5
-  ) +
-  annotation_custom(
-    grob = grid::textGrob(
-      label = "Up",
-      gp = grid::gpar(col = "#d73027")
-    ),
-    xmin = range(df$log2FoldChange)[2]/10*9, 
-    xmax = range(df$log2FoldChange)[2]/10*4,
-    ymin = range(-log10(df$padj))[2]/10*9.5,
-    ymax = range(-log10(df$padj))[2]/10*9.5
-  ) 
+<span class="token comment" spellcheck="true">####----plot----####</span>
+ggplot<span class="token punctuation">(</span>data <span class="token operator">=</span> df<span class="token punctuation">)</span> <span class="token operator">+</span> 
+  geom_point<span class="token punctuation">(</span>aes<span class="token punctuation">(</span>x <span class="token operator">=</span> log2FoldChange<span class="token punctuation">,</span> y <span class="token operator">=</span> <span class="token operator">-</span>log10<span class="token punctuation">(</span>padj<span class="token punctuation">)</span><span class="token punctuation">,</span> 
+                 color <span class="token operator">=</span> log2FoldChange<span class="token punctuation">,</span>
+                 size <span class="token operator">=</span> <span class="token operator">-</span>log10<span class="token punctuation">(</span>padj<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">+</span> 
+  geom_point<span class="token punctuation">(</span>data <span class="token operator">=</span>  df <span class="token percent-operator operator">%>%</span>
+               tidyr<span class="token operator">::</span>drop_na<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token percent-operator operator">%>%</span>
+               dplyr<span class="token operator">::</span>filter<span class="token punctuation">(</span>change <span class="token operator">!=</span> <span class="token string">"stable"</span><span class="token punctuation">)</span> <span class="token percent-operator operator">%>%</span>
+               dplyr<span class="token operator">::</span>arrange<span class="token punctuation">(</span>desc<span class="token punctuation">(</span><span class="token operator">-</span>log10<span class="token punctuation">(</span>padj<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token percent-operator operator">%>%</span>
+               dplyr<span class="token operator">::</span>slice<span class="token punctuation">(</span><span class="token number">1</span><span class="token operator">:</span><span class="token number">20</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+             aes<span class="token punctuation">(</span>x <span class="token operator">=</span> log2FoldChange<span class="token punctuation">,</span> y <span class="token operator">=</span> <span class="token operator">-</span>log10<span class="token punctuation">(</span>padj<span class="token punctuation">)</span><span class="token punctuation">,</span>
+                 <span class="token comment" spellcheck="true"># fill = log2FoldChange,</span>
+                 size <span class="token operator">=</span> <span class="token operator">-</span>log10<span class="token punctuation">(</span>padj<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+             shape <span class="token operator">=</span> <span class="token number">21</span><span class="token punctuation">,</span> show.legend <span class="token operator">=</span> F<span class="token punctuation">,</span> color <span class="token operator">=</span> "<span class="token comment" spellcheck="true">#000000") +</span>
+  geom_text_repel<span class="token punctuation">(</span>data <span class="token operator">=</span>  df <span class="token percent-operator operator">%>%</span> 
+                    tidyr<span class="token operator">::</span>drop_na<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token percent-operator operator">%>%</span> 
+                    dplyr<span class="token operator">::</span>filter<span class="token punctuation">(</span>change <span class="token operator">!=</span> <span class="token string">"stable"</span><span class="token punctuation">)</span> <span class="token percent-operator operator">%>%</span>
+                    dplyr<span class="token operator">::</span>arrange<span class="token punctuation">(</span>desc<span class="token punctuation">(</span><span class="token operator">-</span>log10<span class="token punctuation">(</span>padj<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token percent-operator operator">%>%</span>
+                    dplyr<span class="token operator">::</span>slice<span class="token punctuation">(</span><span class="token number">1</span><span class="token operator">:</span><span class="token number">15</span><span class="token punctuation">)</span> <span class="token percent-operator operator">%>%</span>
+                    dplyr<span class="token operator">::</span>filter<span class="token punctuation">(</span>change <span class="token operator">==</span> <span class="token string">"up"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+                  aes<span class="token punctuation">(</span>x <span class="token operator">=</span> log2FoldChange<span class="token punctuation">,</span> y <span class="token operator">=</span> <span class="token operator">-</span>log10<span class="token punctuation">(</span>padj<span class="token punctuation">)</span><span class="token punctuation">,</span> label <span class="token operator">=</span> gene<span class="token punctuation">)</span><span class="token punctuation">,</span>
+                  box.padding <span class="token operator">=</span> <span class="token number">0.5</span><span class="token punctuation">,</span>
+                  nudge_x <span class="token operator">=</span> <span class="token number">0.5</span><span class="token punctuation">,</span>
+                  nudge_y <span class="token operator">=</span> <span class="token number">0.2</span><span class="token punctuation">,</span>
+                  segment.curvature <span class="token operator">=</span> <span class="token operator">-</span><span class="token number">0.1</span><span class="token punctuation">,</span>
+                  segment.ncp <span class="token operator">=</span> <span class="token number">3</span><span class="token punctuation">,</span>
+                  <span class="token comment" spellcheck="true"># segment.angle = 10,</span>
+                  direction <span class="token operator">=</span> <span class="token string">"y"</span><span class="token punctuation">,</span> 
+                  hjust <span class="token operator">=</span> <span class="token string">"left"</span>
+  <span class="token punctuation">)</span> <span class="token operator">+</span> 
+  geom_text_repel<span class="token punctuation">(</span>data <span class="token operator">=</span>  df <span class="token percent-operator operator">%>%</span> 
+                    tidyr<span class="token operator">::</span>drop_na<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token percent-operator operator">%>%</span> 
+                    dplyr<span class="token operator">::</span>filter<span class="token punctuation">(</span>change <span class="token operator">!=</span> <span class="token string">"stable"</span><span class="token punctuation">)</span> <span class="token percent-operator operator">%>%</span>
+                    dplyr<span class="token operator">::</span>arrange<span class="token punctuation">(</span>desc<span class="token punctuation">(</span><span class="token operator">-</span>log10<span class="token punctuation">(</span>padj<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token percent-operator operator">%>%</span>
+                    dplyr<span class="token operator">::</span>slice<span class="token punctuation">(</span><span class="token number">1</span><span class="token operator">:</span><span class="token number">15</span><span class="token punctuation">)</span> <span class="token percent-operator operator">%>%</span>
+                    dplyr<span class="token operator">::</span>filter<span class="token punctuation">(</span>change <span class="token operator">==</span> <span class="token string">"down"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+                  aes<span class="token punctuation">(</span>x <span class="token operator">=</span> log2FoldChange<span class="token punctuation">,</span> y <span class="token operator">=</span> <span class="token operator">-</span>log10<span class="token punctuation">(</span>padj<span class="token punctuation">)</span><span class="token punctuation">,</span> label <span class="token operator">=</span> gene<span class="token punctuation">)</span><span class="token punctuation">,</span>
+                  box.padding <span class="token operator">=</span> <span class="token number">0.5</span><span class="token punctuation">,</span>
+                  nudge_x <span class="token operator">=</span> <span class="token operator">-</span><span class="token number">0.2</span><span class="token punctuation">,</span>
+                  nudge_y <span class="token operator">=</span> <span class="token number">0.2</span><span class="token punctuation">,</span>
+                  segment.curvature <span class="token operator">=</span> <span class="token operator">-</span><span class="token number">0.1</span><span class="token punctuation">,</span>
+                  segment.ncp <span class="token operator">=</span> <span class="token number">3</span><span class="token punctuation">,</span>
+                  segment.angle <span class="token operator">=</span> <span class="token number">20</span><span class="token punctuation">,</span>
+                  direction <span class="token operator">=</span> <span class="token string">"y"</span><span class="token punctuation">,</span> 
+                  hjust <span class="token operator">=</span> <span class="token string">"right"</span>
+  <span class="token punctuation">)</span> <span class="token operator">+</span> 
+  scale_color_gradientn<span class="token punctuation">(</span>colours <span class="token operator">=</span> c<span class="token punctuation">(</span>"<span class="token comment" spellcheck="true">#3288bd", "#66c2a5","#ffffbf", "#f46d43", "#9e0142"),</span>
+                        values <span class="token operator">=</span> seq<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">0.2</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">+</span>
+  scale_fill_gradientn<span class="token punctuation">(</span>colours <span class="token operator">=</span> c<span class="token punctuation">(</span>"<span class="token comment" spellcheck="true">#3288bd", "#66c2a5","#ffffbf", "#f46d43", "#9e0142"),</span>
+                       values <span class="token operator">=</span> seq<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">0.2</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">+</span>
+  geom_vline<span class="token punctuation">(</span>xintercept <span class="token operator">=</span> c<span class="token punctuation">(</span><span class="token operator">-</span>log2<span class="token punctuation">(</span><span class="token number">1.5</span><span class="token punctuation">)</span><span class="token punctuation">,</span> log2<span class="token punctuation">(</span><span class="token number">1.5</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span> linetype <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">)</span> <span class="token operator">+</span>
+  geom_hline<span class="token punctuation">(</span>yintercept <span class="token operator">=</span> <span class="token operator">-</span>log10<span class="token punctuation">(</span><span class="token number">0.05</span><span class="token punctuation">)</span><span class="token punctuation">,</span> linetype <span class="token operator">=</span> <span class="token number">4</span><span class="token punctuation">)</span> <span class="token operator">+</span> 
+  scale_size<span class="token punctuation">(</span>range <span class="token operator">=</span> c<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">7</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">+</span> 
+  <span class="token comment" spellcheck="true"># ggtitle(label = "Volcano Plot",</span>
+  <span class="token comment" spellcheck="true">#         subtitle = "volcano plot") + </span>
+  <span class="token comment" spellcheck="true"># xlim(c(-3, 3)) + </span>
+  <span class="token comment" spellcheck="true"># ylim(c(-1, 90)) + </span>
+  theme_bw<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> 
+  theme<span class="token punctuation">(</span>panel.grid <span class="token operator">=</span> element_blank<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        legend.background <span class="token operator">=</span> element_roundrect<span class="token punctuation">(</span>color <span class="token operator">=</span> "<span class="token comment" spellcheck="true">#808080", linetype = 1),</span>
+        axis.text <span class="token operator">=</span> element_text<span class="token punctuation">(</span>size <span class="token operator">=</span> <span class="token number">13</span><span class="token punctuation">,</span> color <span class="token operator">=</span> "<span class="token comment" spellcheck="true">#000000"),</span>
+        axis.title <span class="token operator">=</span> element_text<span class="token punctuation">(</span>size <span class="token operator">=</span> <span class="token number">15</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        plot.title <span class="token operator">=</span> element_text<span class="token punctuation">(</span>hjust <span class="token operator">=</span> <span class="token number">0.5</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        plot.subtitle <span class="token operator">=</span> element_text<span class="token punctuation">(</span>hjust <span class="token operator">=</span> <span class="token number">0.5</span><span class="token punctuation">)</span>
+  <span class="token punctuation">)</span> <span class="token operator">+</span> 
+  annotate<span class="token punctuation">(</span>geom <span class="token operator">=</span> <span class="token string">"text"</span><span class="token punctuation">,</span> x <span class="token operator">=</span> <span class="token number">2.5</span><span class="token punctuation">,</span> y <span class="token operator">=</span> <span class="token number">0.25</span><span class="token punctuation">,</span> label <span class="token operator">=</span> <span class="token string">"p = 0.05"</span><span class="token punctuation">,</span> size <span class="token operator">=</span> <span class="token number">5</span><span class="token punctuation">)</span> <span class="token operator">+</span> 
+  coord_cartesian<span class="token punctuation">(</span>clip <span class="token operator">=</span> <span class="token string">"off"</span><span class="token punctuation">)</span> <span class="token operator">+</span> 
+  annotation_custom<span class="token punctuation">(</span>
+    grob <span class="token operator">=</span> grid<span class="token operator">::</span>segmentsGrob<span class="token punctuation">(</span>
+      y0 <span class="token operator">=</span> unit<span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">10</span><span class="token punctuation">,</span> <span class="token string">"pt"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+      y1 <span class="token operator">=</span> unit<span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">10</span><span class="token punctuation">,</span> <span class="token string">"pt"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+      arrow <span class="token operator">=</span> arrow<span class="token punctuation">(</span>angle <span class="token operator">=</span> <span class="token number">45</span><span class="token punctuation">,</span> length <span class="token operator">=</span> unit<span class="token punctuation">(</span>.<span class="token number">2</span><span class="token punctuation">,</span> <span class="token string">"cm"</span><span class="token punctuation">)</span><span class="token punctuation">,</span> ends <span class="token operator">=</span> <span class="token string">"first"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+      gp <span class="token operator">=</span> grid<span class="token operator">::</span>gpar<span class="token punctuation">(</span>lwd <span class="token operator">=</span> <span class="token number">3</span><span class="token punctuation">,</span> col <span class="token operator">=</span> "<span class="token comment" spellcheck="true">#74add1")</span>
+    <span class="token punctuation">)</span><span class="token punctuation">,</span> 
+    xmin <span class="token operator">=</span> range<span class="token punctuation">(</span>df<span class="token operator">$</span>log2FoldChange<span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token operator">/</span><span class="token number">10</span><span class="token operator">*</span><span class="token number">9</span><span class="token punctuation">,</span> 
+    xmax <span class="token operator">=</span> range<span class="token punctuation">(</span>df<span class="token operator">$</span>log2FoldChange<span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token operator">/</span><span class="token number">10</span><span class="token operator">*</span><span class="token number">4</span><span class="token punctuation">,</span>
+    ymin <span class="token operator">=</span> range<span class="token punctuation">(</span><span class="token operator">-</span>log10<span class="token punctuation">(</span>df<span class="token operator">$</span>padj<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token operator">/</span><span class="token number">10</span><span class="token operator">*</span><span class="token number">9.5</span><span class="token punctuation">,</span>
+    ymax <span class="token operator">=</span> range<span class="token punctuation">(</span><span class="token operator">-</span>log10<span class="token punctuation">(</span>df<span class="token operator">$</span>padj<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token operator">/</span><span class="token number">10</span><span class="token operator">*</span><span class="token number">9.5</span>
+  <span class="token punctuation">)</span> <span class="token operator">+</span>
+  annotation_custom<span class="token punctuation">(</span>
+    grob <span class="token operator">=</span> grid<span class="token operator">::</span>textGrob<span class="token punctuation">(</span>
+      label <span class="token operator">=</span> <span class="token string">"Down"</span><span class="token punctuation">,</span>
+      gp <span class="token operator">=</span> grid<span class="token operator">::</span>gpar<span class="token punctuation">(</span>col <span class="token operator">=</span> "<span class="token comment" spellcheck="true">#74add1")</span>
+    <span class="token punctuation">)</span><span class="token punctuation">,</span>
+    xmin <span class="token operator">=</span> range<span class="token punctuation">(</span>df<span class="token operator">$</span>log2FoldChange<span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token operator">/</span><span class="token number">10</span><span class="token operator">*</span><span class="token number">9</span><span class="token punctuation">,</span> 
+    xmax <span class="token operator">=</span> range<span class="token punctuation">(</span>df<span class="token operator">$</span>log2FoldChange<span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token operator">/</span><span class="token number">10</span><span class="token operator">*</span><span class="token number">4</span><span class="token punctuation">,</span>
+    ymin <span class="token operator">=</span> range<span class="token punctuation">(</span><span class="token operator">-</span>log10<span class="token punctuation">(</span>df<span class="token operator">$</span>padj<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token operator">/</span><span class="token number">10</span><span class="token operator">*</span><span class="token number">9.5</span><span class="token punctuation">,</span>
+    ymax <span class="token operator">=</span> range<span class="token punctuation">(</span><span class="token operator">-</span>log10<span class="token punctuation">(</span>df<span class="token operator">$</span>padj<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token operator">/</span><span class="token number">10</span><span class="token operator">*</span><span class="token number">9.5</span>
+  <span class="token punctuation">)</span> <span class="token operator">+</span>
+  annotation_custom<span class="token punctuation">(</span>
+    grob <span class="token operator">=</span> grid<span class="token operator">::</span>segmentsGrob<span class="token punctuation">(</span>
+      y0 <span class="token operator">=</span> unit<span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">10</span><span class="token punctuation">,</span> <span class="token string">"pt"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+      y1 <span class="token operator">=</span> unit<span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">10</span><span class="token punctuation">,</span> <span class="token string">"pt"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+      arrow <span class="token operator">=</span> arrow<span class="token punctuation">(</span>angle <span class="token operator">=</span> <span class="token number">45</span><span class="token punctuation">,</span> length <span class="token operator">=</span> unit<span class="token punctuation">(</span>.<span class="token number">2</span><span class="token punctuation">,</span> <span class="token string">"cm"</span><span class="token punctuation">)</span><span class="token punctuation">,</span> ends <span class="token operator">=</span> <span class="token string">"last"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+      gp <span class="token operator">=</span> grid<span class="token operator">::</span>gpar<span class="token punctuation">(</span>lwd <span class="token operator">=</span> <span class="token number">3</span><span class="token punctuation">,</span> col <span class="token operator">=</span> "<span class="token comment" spellcheck="true">#d73027")</span>
+    <span class="token punctuation">)</span><span class="token punctuation">,</span> 
+    xmin <span class="token operator">=</span> range<span class="token punctuation">(</span>df<span class="token operator">$</span>log2FoldChange<span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token operator">/</span><span class="token number">10</span><span class="token operator">*</span><span class="token number">9</span><span class="token punctuation">,</span> 
+    xmax <span class="token operator">=</span> range<span class="token punctuation">(</span>df<span class="token operator">$</span>log2FoldChange<span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token operator">/</span><span class="token number">10</span><span class="token operator">*</span><span class="token number">4</span><span class="token punctuation">,</span>
+    ymin <span class="token operator">=</span> range<span class="token punctuation">(</span><span class="token operator">-</span>log10<span class="token punctuation">(</span>df<span class="token operator">$</span>padj<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token operator">/</span><span class="token number">10</span><span class="token operator">*</span><span class="token number">9.5</span><span class="token punctuation">,</span>
+    ymax <span class="token operator">=</span> range<span class="token punctuation">(</span><span class="token operator">-</span>log10<span class="token punctuation">(</span>df<span class="token operator">$</span>padj<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token operator">/</span><span class="token number">10</span><span class="token operator">*</span><span class="token number">9.5</span>
+  <span class="token punctuation">)</span> <span class="token operator">+</span>
+  annotation_custom<span class="token punctuation">(</span>
+    grob <span class="token operator">=</span> grid<span class="token operator">::</span>textGrob<span class="token punctuation">(</span>
+      label <span class="token operator">=</span> <span class="token string">"Up"</span><span class="token punctuation">,</span>
+      gp <span class="token operator">=</span> grid<span class="token operator">::</span>gpar<span class="token punctuation">(</span>col <span class="token operator">=</span> "<span class="token comment" spellcheck="true">#d73027")</span>
+    <span class="token punctuation">)</span><span class="token punctuation">,</span>
+    xmin <span class="token operator">=</span> range<span class="token punctuation">(</span>df<span class="token operator">$</span>log2FoldChange<span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token operator">/</span><span class="token number">10</span><span class="token operator">*</span><span class="token number">9</span><span class="token punctuation">,</span> 
+    xmax <span class="token operator">=</span> range<span class="token punctuation">(</span>df<span class="token operator">$</span>log2FoldChange<span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token operator">/</span><span class="token number">10</span><span class="token operator">*</span><span class="token number">4</span><span class="token punctuation">,</span>
+    ymin <span class="token operator">=</span> range<span class="token punctuation">(</span><span class="token operator">-</span>log10<span class="token punctuation">(</span>df<span class="token operator">$</span>padj<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token operator">/</span><span class="token number">10</span><span class="token operator">*</span><span class="token number">9.5</span><span class="token punctuation">,</span>
+    ymax <span class="token operator">=</span> range<span class="token punctuation">(</span><span class="token operator">-</span>log10<span class="token punctuation">(</span>df<span class="token operator">$</span>padj<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token operator">/</span><span class="token number">10</span><span class="token operator">*</span><span class="token number">9.5</span>
+  <span class="token punctuation">)</span> 
 
-####----save result----####
-ggsave('volcano2.png',dpi = 300,bg = 'white',width = 8,height = 7)
+<span class="token comment" spellcheck="true">####----save result----####</span>
+ggsave<span class="token punctuation">(</span><span class="token string">'volcano2.png'</span><span class="token punctuation">,</span>dpi <span class="token operator">=</span> <span class="token number">300</span><span class="token punctuation">,</span>bg <span class="token operator">=</span> <span class="token string">'white'</span><span class="token punctuation">,</span>width <span class="token operator">=</span> <span class="token number">8</span><span class="token punctuation">,</span>height <span class="token operator">=</span> <span class="token number">7</span><span class="token punctuation">)</span>
 <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <h4 id="火山图绘制–形式三"><a href="#火山图绘制–形式三" class="headerlink" title="火山图绘制–形式三"></a>火山图绘制–形式三</h4><p><strong>效果如下</strong></p>
 <p><img src="https://s2.loli.net/2023/12/13/CQueAYF3XOd4bxz.png" alt="volcano3.png"></p>
 <p><strong>相关代码</strong></p>
-<pre class="line-numbers language-R"><code class="language-R">########## 渐变火山图3 ############ 
-rm(list = ls())
+<pre class="line-numbers language-r"><code class="language-r"><span class="token comment" spellcheck="true">########## 渐变火山图3 ############ </span>
+rm<span class="token punctuation">(</span>list <span class="token operator">=</span> ls<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
 
-library(ggplot2) #绘图使用
-library(cowplot) #调整背景
-library(ggrepel) #加标签
+library<span class="token punctuation">(</span>ggplot2<span class="token punctuation">)</span> <span class="token comment" spellcheck="true">#绘图使用</span>
+library<span class="token punctuation">(</span>cowplot<span class="token punctuation">)</span> <span class="token comment" spellcheck="true">#调整背景</span>
+library<span class="token punctuation">(</span>ggrepel<span class="token punctuation">)</span> <span class="token comment" spellcheck="true">#加标签</span>
 
-####----load data----####
-df <- read.table('diff_DEseq2.xls', header = TRUE, sep = "\t",row.names = 1)
-df$log10FDR <- -log10(df$padj)
+<span class="token comment" spellcheck="true">####----load data----####</span>
+df <span class="token operator">&lt;-</span> read.table<span class="token punctuation">(</span><span class="token string">'diff_DEseq2.xls'</span><span class="token punctuation">,</span> header <span class="token operator">=</span> <span class="token boolean">TRUE</span><span class="token punctuation">,</span> sep <span class="token operator">=</span> <span class="token string">"\t"</span><span class="token punctuation">,</span>row.names <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">)</span>
+df<span class="token operator">$</span>log10FDR <span class="token operator">&lt;-</span> <span class="token operator">-</span>log10<span class="token punctuation">(</span>df<span class="token operator">$</span>padj<span class="token punctuation">)</span>
 
-#新加一列label
-df$label = ""
-#对差异基因的p值从小到大排序
-df <- df[order(df$padj),]
-#高表达的基因中，选择FDR值最小的10个
-up.genes = head(df$gene[which(df$change == "up")],10)
-##低表达的基因中，选择FDR值最小的10个
-down.genes = head(df$gene[which(df$change == "down")],10)
-#将高表达基因和低表达基因合并，加入到label中
-deg.top10.genes <- c(as.character(up.genes),as.character(down.genes))
-df$label[match(deg.top10.genes,df$gene)] <- deg.top10.genes
+<span class="token comment" spellcheck="true">#新加一列label</span>
+df<span class="token operator">$</span>label <span class="token operator">=</span> <span class="token string">""</span>
+<span class="token comment" spellcheck="true">#对差异基因的p值从小到大排序</span>
+df <span class="token operator">&lt;-</span> df<span class="token punctuation">[</span>order<span class="token punctuation">(</span>df<span class="token operator">$</span>padj<span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token punctuation">]</span>
+<span class="token comment" spellcheck="true">#高表达的基因中，选择FDR值最小的10个</span>
+up.genes <span class="token operator">=</span> head<span class="token punctuation">(</span>df<span class="token operator">$</span>gene<span class="token punctuation">[</span>which<span class="token punctuation">(</span>df<span class="token operator">$</span>change <span class="token operator">==</span> <span class="token string">"up"</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">,</span><span class="token number">10</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true">##低表达的基因中，选择FDR值最小的10个</span>
+down.genes <span class="token operator">=</span> head<span class="token punctuation">(</span>df<span class="token operator">$</span>gene<span class="token punctuation">[</span>which<span class="token punctuation">(</span>df<span class="token operator">$</span>change <span class="token operator">==</span> <span class="token string">"down"</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">,</span><span class="token number">10</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true">#将高表达基因和低表达基因合并，加入到label中</span>
+deg.top10.genes <span class="token operator">&lt;-</span> c<span class="token punctuation">(</span>as.character<span class="token punctuation">(</span>up.genes<span class="token punctuation">)</span><span class="token punctuation">,</span>as.character<span class="token punctuation">(</span>down.genes<span class="token punctuation">)</span><span class="token punctuation">)</span>
+df<span class="token operator">$</span>label<span class="token punctuation">[</span>match<span class="token punctuation">(</span>deg.top10.genes<span class="token punctuation">,</span>df<span class="token operator">$</span>gene<span class="token punctuation">)</span><span class="token punctuation">]</span> <span class="token operator">&lt;-</span> deg.top10.genes
 
-# 设置点的大小
-max_size <- 4
-min_size <- 1
-df$Size <- sqrt(min_size + (max_size - min_size) * (df$log10FDR - min(df$log10FDR)) / (max(df$log10FDR) - min(df$log10FDR)))
+<span class="token comment" spellcheck="true"># 设置点的大小</span>
+max_size <span class="token operator">&lt;-</span> <span class="token number">4</span>
+min_size <span class="token operator">&lt;-</span> <span class="token number">1</span>
+df<span class="token operator">$</span>Size <span class="token operator">&lt;-</span> sqrt<span class="token punctuation">(</span>min_size <span class="token operator">+</span> <span class="token punctuation">(</span>max_size <span class="token operator">-</span> min_size<span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token punctuation">(</span>df<span class="token operator">$</span>log10FDR <span class="token operator">-</span> min<span class="token punctuation">(</span>df<span class="token operator">$</span>log10FDR<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token punctuation">(</span>max<span class="token punctuation">(</span>df<span class="token operator">$</span>log10FDR<span class="token punctuation">)</span> <span class="token operator">-</span> min<span class="token punctuation">(</span>df<span class="token operator">$</span>log10FDR<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
 
-##绘图
-ggplot(df,aes(log2FoldChange, -log10(padj)))+
-  # 横向水平参考线：
-  geom_hline(yintercept = -log10(0.05), linetype = "dashed", color = "#999999")+
-  # 纵向垂直参考线：
-  geom_vline(xintercept = c(-1.2,1.2), linetype = "dashed", color = "#999999")+
-  # 散点图:
-  geom_point(aes(size=Size, color= -log10(padj)))+
-  # 指定颜色渐变模式：
-  scale_color_gradientn(values = seq(0,1,0.2),
-                        colors = c("#39489f","#39bbec","#f9ed36","#f38466","#b81f25"))+
-  # 指定散点大小渐变模式：
-  scale_size_continuous(range = c(0.5,4))+
-  # 主题调整：
-  theme_bw()+
-  # 调整主题和图例位置：
-  theme(panel.grid = element_blank(),
-        legend.position = c(0.01,0.8),
-        legend.justification = c(0,1)
-  )+
-  # 设置部分图例不显示：
-  guides(col = guide_colourbar(title = "-Log10_p-value"),
-         size = "none")+
-  # 添加标签：
-  geom_text(aes(label=label, color = -log10(padj)), size = 3, vjust = 1.5, hjust=1)+
-  # 修改坐标轴：
-  xlab("Log2FC")+
-  ylab("-Log10(FDR p-value)")
+<span class="token comment" spellcheck="true">##绘图</span>
+ggplot<span class="token punctuation">(</span>df<span class="token punctuation">,</span>aes<span class="token punctuation">(</span>log2FoldChange<span class="token punctuation">,</span> <span class="token operator">-</span>log10<span class="token punctuation">(</span>padj<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token operator">+</span>
+  <span class="token comment" spellcheck="true"># 横向水平参考线：</span>
+  geom_hline<span class="token punctuation">(</span>yintercept <span class="token operator">=</span> <span class="token operator">-</span>log10<span class="token punctuation">(</span><span class="token number">0.05</span><span class="token punctuation">)</span><span class="token punctuation">,</span> linetype <span class="token operator">=</span> <span class="token string">"dashed"</span><span class="token punctuation">,</span> color <span class="token operator">=</span> "<span class="token comment" spellcheck="true">#999999")+</span>
+  <span class="token comment" spellcheck="true"># 纵向垂直参考线：</span>
+  geom_vline<span class="token punctuation">(</span>xintercept <span class="token operator">=</span> c<span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">1.2</span><span class="token punctuation">,</span><span class="token number">1.2</span><span class="token punctuation">)</span><span class="token punctuation">,</span> linetype <span class="token operator">=</span> <span class="token string">"dashed"</span><span class="token punctuation">,</span> color <span class="token operator">=</span> "<span class="token comment" spellcheck="true">#999999")+</span>
+  <span class="token comment" spellcheck="true"># 散点图:</span>
+  geom_point<span class="token punctuation">(</span>aes<span class="token punctuation">(</span>size<span class="token operator">=</span>Size<span class="token punctuation">,</span> color<span class="token operator">=</span> <span class="token operator">-</span>log10<span class="token punctuation">(</span>padj<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token operator">+</span>
+  <span class="token comment" spellcheck="true"># 指定颜色渐变模式：</span>
+  scale_color_gradientn<span class="token punctuation">(</span>values <span class="token operator">=</span> seq<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">0.2</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+                        colors <span class="token operator">=</span> c<span class="token punctuation">(</span>"<span class="token comment" spellcheck="true">#39489f","#39bbec","#f9ed36","#f38466","#b81f25"))+</span>
+  <span class="token comment" spellcheck="true"># 指定散点大小渐变模式：</span>
+  scale_size_continuous<span class="token punctuation">(</span>range <span class="token operator">=</span> c<span class="token punctuation">(</span><span class="token number">0.5</span><span class="token punctuation">,</span><span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token operator">+</span>
+  <span class="token comment" spellcheck="true"># 主题调整：</span>
+  theme_bw<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">+</span>
+  <span class="token comment" spellcheck="true"># 调整主题和图例位置：</span>
+  theme<span class="token punctuation">(</span>panel.grid <span class="token operator">=</span> element_blank<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        legend.position <span class="token operator">=</span> c<span class="token punctuation">(</span><span class="token number">0.01</span><span class="token punctuation">,</span><span class="token number">0.8</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        legend.justification <span class="token operator">=</span> c<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span>
+  <span class="token punctuation">)</span><span class="token operator">+</span>
+  <span class="token comment" spellcheck="true"># 设置部分图例不显示：</span>
+  guides<span class="token punctuation">(</span>col <span class="token operator">=</span> guide_colourbar<span class="token punctuation">(</span>title <span class="token operator">=</span> <span class="token string">"-Log10_p-value"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+         size <span class="token operator">=</span> <span class="token string">"none"</span><span class="token punctuation">)</span><span class="token operator">+</span>
+  <span class="token comment" spellcheck="true"># 添加标签：</span>
+  geom_text<span class="token punctuation">(</span>aes<span class="token punctuation">(</span>label<span class="token operator">=</span>label<span class="token punctuation">,</span> color <span class="token operator">=</span> <span class="token operator">-</span>log10<span class="token punctuation">(</span>padj<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span> size <span class="token operator">=</span> <span class="token number">3</span><span class="token punctuation">,</span> vjust <span class="token operator">=</span> <span class="token number">1.5</span><span class="token punctuation">,</span> hjust<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token operator">+</span>
+  <span class="token comment" spellcheck="true"># 修改坐标轴：</span>
+  xlab<span class="token punctuation">(</span><span class="token string">"Log2FC"</span><span class="token punctuation">)</span><span class="token operator">+</span>
+  ylab<span class="token punctuation">(</span><span class="token string">"-Log10(FDR p-value)"</span><span class="token punctuation">)</span>
 
-####----save result----####
-ggsave('volcano3.png',dpi = 300,bg = 'white',width = 8,height = 7)
+<span class="token comment" spellcheck="true">####----save result----####</span>
+ggsave<span class="token punctuation">(</span><span class="token string">'volcano3.png'</span><span class="token punctuation">,</span>dpi <span class="token operator">=</span> <span class="token number">300</span><span class="token punctuation">,</span>bg <span class="token operator">=</span> <span class="token string">'white'</span><span class="token punctuation">,</span>width <span class="token operator">=</span> <span class="token number">8</span><span class="token punctuation">,</span>height <span class="token operator">=</span> <span class="token number">7</span><span class="token punctuation">)</span>
 <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <h4 id="火山图绘制–形式四"><a href="#火山图绘制–形式四" class="headerlink" title="火山图绘制–形式四"></a>火山图绘制–形式四</h4><p><strong>效果如下</strong></p>
 <p><img src="https://s2.loli.net/2023/12/13/D9FX68rInkpGsOS.png" alt="volcano4.png"></p>
 <p><strong>相关代码</strong></p>
-<pre class="line-numbers language-R"><code class="language-R">########## 火山图4 ############ 
-rm(list = ls())
-#相关R包载入：
-library(ggplot2)
-library(ggrepel)
-library(dplyr)
-library(patchwork)
+<pre class="line-numbers language-r"><code class="language-r"><span class="token comment" spellcheck="true">########## 火山图4 ############ </span>
+rm<span class="token punctuation">(</span>list <span class="token operator">=</span> ls<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true">#相关R包载入：</span>
+library<span class="token punctuation">(</span>ggplot2<span class="token punctuation">)</span>
+library<span class="token punctuation">(</span>ggrepel<span class="token punctuation">)</span>
+library<span class="token punctuation">(</span>dplyr<span class="token punctuation">)</span>
+library<span class="token punctuation">(</span>patchwork<span class="token punctuation">)</span>
 
-# 横坐标A—组间表达量的平均强度：
-# (log2(Mean_expA*Mean_expD))/2
-# 纵坐标M—组间差异倍数取以2为底的对数值：
-# log2FC
+<span class="token comment" spellcheck="true"># 横坐标A—组间表达量的平均强度：</span>
+<span class="token comment" spellcheck="true"># (log2(Mean_expA*Mean_expD))/2</span>
+<span class="token comment" spellcheck="true"># 纵坐标M—组间差异倍数取以2为底的对数值：</span>
+<span class="token comment" spellcheck="true"># log2FC</span>
 
-####----load data----####
-df <- read.table('diff_DEseq2.xls', header = TRUE, sep = "\t",row.names = 1)
+<span class="token comment" spellcheck="true">####----load data----####</span>
+df <span class="token operator">&lt;-</span> read.table<span class="token punctuation">(</span><span class="token string">'diff_DEseq2.xls'</span><span class="token punctuation">,</span> header <span class="token operator">=</span> <span class="token boolean">TRUE</span><span class="token punctuation">,</span> sep <span class="token operator">=</span> <span class="token string">"\t"</span><span class="token punctuation">,</span>row.names <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">)</span>
 
-#新建横纵坐标列：
-df$log2baseMean <- log2(df$baseMean)
+<span class="token comment" spellcheck="true">#新建横纵坐标列：</span>
+df<span class="token operator">$</span>log2baseMean <span class="token operator">&lt;-</span> log2<span class="token punctuation">(</span>df<span class="token operator">$</span>baseMean<span class="token punctuation">)</span>
 
-#ggplot2绘图：
-#自定义颜色：
-mycol <- c("#EB4232","grey90","#2DB2EB")
+<span class="token comment" spellcheck="true">#ggplot2绘图：</span>
+<span class="token comment" spellcheck="true">#自定义颜色：</span>
+mycol <span class="token operator">&lt;-</span> c<span class="token punctuation">(</span>"<span class="token comment" spellcheck="true">#EB4232","grey90","#2DB2EB")</span>
 
-#自定义主题：
-mytheme <- theme_classic() +
-  theme(plot.title = element_text(size = 17),
-        axis.title = element_text(size = 15),
-        axis.text = element_text(size = 14),
-        legend.text = element_text(size = 14),
-        plot.margin = margin(15,5.5,5.5,5.5))
+<span class="token comment" spellcheck="true">#自定义主题：</span>
+mytheme <span class="token operator">&lt;-</span> theme_classic<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span>
+  theme<span class="token punctuation">(</span>plot.title <span class="token operator">=</span> element_text<span class="token punctuation">(</span>size <span class="token operator">=</span> <span class="token number">17</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        axis.title <span class="token operator">=</span> element_text<span class="token punctuation">(</span>size <span class="token operator">=</span> <span class="token number">15</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        axis.text <span class="token operator">=</span> element_text<span class="token punctuation">(</span>size <span class="token operator">=</span> <span class="token number">14</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        legend.text <span class="token operator">=</span> element_text<span class="token punctuation">(</span>size <span class="token operator">=</span> <span class="token number">14</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        plot.margin <span class="token operator">=</span> margin<span class="token punctuation">(</span><span class="token number">15</span><span class="token punctuation">,</span><span class="token number">5.5</span><span class="token punctuation">,</span><span class="token number">5.5</span><span class="token punctuation">,</span><span class="token number">5.5</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
 
-#以显著上下调Top10为例：
-up <- filter(df, change == 'up') %>% distinct(gene, .keep_all = T) %>%
-  top_n(10, -log10(padj))
+<span class="token comment" spellcheck="true">#以显著上下调Top10为例：</span>
+up <span class="token operator">&lt;-</span> filter<span class="token punctuation">(</span>df<span class="token punctuation">,</span> change <span class="token operator">==</span> <span class="token string">'up'</span><span class="token punctuation">)</span> <span class="token percent-operator operator">%>%</span> distinct<span class="token punctuation">(</span>gene<span class="token punctuation">,</span> .keep_all <span class="token operator">=</span> T<span class="token punctuation">)</span> <span class="token percent-operator operator">%>%</span>
+  top_n<span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">,</span> <span class="token operator">-</span>log10<span class="token punctuation">(</span>padj<span class="token punctuation">)</span><span class="token punctuation">)</span>
 
-down <- filter(df, change == 'down') %>% distinct(gene, .keep_all = T) %>%
-  top_n(10, -log10(padj))
+down <span class="token operator">&lt;-</span> filter<span class="token punctuation">(</span>df<span class="token punctuation">,</span> change <span class="token operator">==</span> <span class="token string">'down'</span><span class="token punctuation">)</span> <span class="token percent-operator operator">%>%</span> distinct<span class="token punctuation">(</span>gene<span class="token punctuation">,</span> .keep_all <span class="token operator">=</span> T<span class="token punctuation">)</span> <span class="token percent-operator operator">%>%</span>
+  top_n<span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">,</span> <span class="token operator">-</span>log10<span class="token punctuation">(</span>padj<span class="token punctuation">)</span><span class="token punctuation">)</span>
 
-sig <- rbind(up,down)
+sig <span class="token operator">&lt;-</span> rbind<span class="token punctuation">(</span>up<span class="token punctuation">,</span>down<span class="token punctuation">)</span>
 
-ggplot() +
-  geom_point(data = df[df$change=='stable',],
-             aes(x = log2baseMean, y = log2FoldChange, color = change)) +
-  geom_point(data = df[df$change=='up',],
-             aes(x = log2baseMean, y = log2FoldChange, color = change)) +
-  geom_point(data = df[df$change=='down',],
-             aes(x = log2baseMean, y = log2FoldChange, color = change)) +
-  geom_point(data = sig,
-             aes(x = log2baseMean, y = log2FoldChange, color = change),
-             size = 3.5, alpha = 0.2) +
-  geom_text_repel(data = sig,
-                  aes(x = log2baseMean, y = log2FoldChange, label = gene),
-                  seed = 233,
-                  size = 3.5,
-                  color = 'black',
-                  min.segment.length = 0,
-                  force = 2,
-                  force_pull = 2,
-                  box.padding = 0.1,
-                  max.overlaps = Inf,
-                  segment.linetype = 3, #线段类型,1为实线,2-6为不同类型虚线
-                  segment.color = 'black', #线段颜色
-                  segment.alpha = 0.5, #线段不透明度
-                  nudge_x = 10 - sig$A, #标签x轴起始位置
-                  direction = "y",
-                  hjust = 0) + #0右对齐，1左对齐，0.5居中 
-  scale_colour_manual(name = '', values = rev(alpha(mycol, 0.7))) +
-  geom_hline(yintercept = 0, size = 0.5, color = "black", lty = 'dashed') +
-  labs(title = 'MA_Plot') +
+ggplot<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span>
+  geom_point<span class="token punctuation">(</span>data <span class="token operator">=</span> df<span class="token punctuation">[</span>df<span class="token operator">$</span>change<span class="token operator">==</span><span class="token string">'stable'</span><span class="token punctuation">,</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+             aes<span class="token punctuation">(</span>x <span class="token operator">=</span> log2baseMean<span class="token punctuation">,</span> y <span class="token operator">=</span> log2FoldChange<span class="token punctuation">,</span> color <span class="token operator">=</span> change<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">+</span>
+  geom_point<span class="token punctuation">(</span>data <span class="token operator">=</span> df<span class="token punctuation">[</span>df<span class="token operator">$</span>change<span class="token operator">==</span><span class="token string">'up'</span><span class="token punctuation">,</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+             aes<span class="token punctuation">(</span>x <span class="token operator">=</span> log2baseMean<span class="token punctuation">,</span> y <span class="token operator">=</span> log2FoldChange<span class="token punctuation">,</span> color <span class="token operator">=</span> change<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">+</span>
+  geom_point<span class="token punctuation">(</span>data <span class="token operator">=</span> df<span class="token punctuation">[</span>df<span class="token operator">$</span>change<span class="token operator">==</span><span class="token string">'down'</span><span class="token punctuation">,</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+             aes<span class="token punctuation">(</span>x <span class="token operator">=</span> log2baseMean<span class="token punctuation">,</span> y <span class="token operator">=</span> log2FoldChange<span class="token punctuation">,</span> color <span class="token operator">=</span> change<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">+</span>
+  geom_point<span class="token punctuation">(</span>data <span class="token operator">=</span> sig<span class="token punctuation">,</span>
+             aes<span class="token punctuation">(</span>x <span class="token operator">=</span> log2baseMean<span class="token punctuation">,</span> y <span class="token operator">=</span> log2FoldChange<span class="token punctuation">,</span> color <span class="token operator">=</span> change<span class="token punctuation">)</span><span class="token punctuation">,</span>
+             size <span class="token operator">=</span> <span class="token number">3.5</span><span class="token punctuation">,</span> alpha <span class="token operator">=</span> <span class="token number">0.2</span><span class="token punctuation">)</span> <span class="token operator">+</span>
+  geom_text_repel<span class="token punctuation">(</span>data <span class="token operator">=</span> sig<span class="token punctuation">,</span>
+                  aes<span class="token punctuation">(</span>x <span class="token operator">=</span> log2baseMean<span class="token punctuation">,</span> y <span class="token operator">=</span> log2FoldChange<span class="token punctuation">,</span> label <span class="token operator">=</span> gene<span class="token punctuation">)</span><span class="token punctuation">,</span>
+                  seed <span class="token operator">=</span> <span class="token number">233</span><span class="token punctuation">,</span>
+                  size <span class="token operator">=</span> <span class="token number">3.5</span><span class="token punctuation">,</span>
+                  color <span class="token operator">=</span> <span class="token string">'black'</span><span class="token punctuation">,</span>
+                  min.segment.length <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">,</span>
+                  force <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">,</span>
+                  force_pull <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">,</span>
+                  box.padding <span class="token operator">=</span> <span class="token number">0.1</span><span class="token punctuation">,</span>
+                  max.overlaps <span class="token operator">=</span> <span class="token number">Inf</span><span class="token punctuation">,</span>
+                  segment.linetype <span class="token operator">=</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token comment" spellcheck="true">#线段类型,1为实线,2-6为不同类型虚线</span>
+                  segment.color <span class="token operator">=</span> <span class="token string">'black'</span><span class="token punctuation">,</span> <span class="token comment" spellcheck="true">#线段颜色</span>
+                  segment.alpha <span class="token operator">=</span> <span class="token number">0.5</span><span class="token punctuation">,</span> <span class="token comment" spellcheck="true">#线段不透明度</span>
+                  nudge_x <span class="token operator">=</span> <span class="token number">10</span> <span class="token operator">-</span> sig<span class="token operator">$</span>A<span class="token punctuation">,</span> <span class="token comment" spellcheck="true">#标签x轴起始位置</span>
+                  direction <span class="token operator">=</span> <span class="token string">"y"</span><span class="token punctuation">,</span>
+                  hjust <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token comment" spellcheck="true">#0右对齐，1左对齐，0.5居中 </span>
+  scale_colour_manual<span class="token punctuation">(</span>name <span class="token operator">=</span> <span class="token string">''</span><span class="token punctuation">,</span> values <span class="token operator">=</span> rev<span class="token punctuation">(</span>alpha<span class="token punctuation">(</span>mycol<span class="token punctuation">,</span> <span class="token number">0.7</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">+</span>
+  geom_hline<span class="token punctuation">(</span>yintercept <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">,</span> size <span class="token operator">=</span> <span class="token number">0.5</span><span class="token punctuation">,</span> color <span class="token operator">=</span> <span class="token string">"black"</span><span class="token punctuation">,</span> lty <span class="token operator">=</span> <span class="token string">'dashed'</span><span class="token punctuation">)</span> <span class="token operator">+</span>
+  labs<span class="token punctuation">(</span>title <span class="token operator">=</span> <span class="token string">'MA_Plot'</span><span class="token punctuation">)</span> <span class="token operator">+</span>
   mytheme
-####----save result----####
-ggsave('volcano4.png',dpi = 300,bg = 'white',width = 8,height = 7)
+<span class="token comment" spellcheck="true">####----save result----####</span>
+ggsave<span class="token punctuation">(</span><span class="token string">'volcano4.png'</span><span class="token punctuation">,</span>dpi <span class="token operator">=</span> <span class="token number">300</span><span class="token punctuation">,</span>bg <span class="token operator">=</span> <span class="token string">'white'</span><span class="token punctuation">,</span>width <span class="token operator">=</span> <span class="token number">8</span><span class="token punctuation">,</span>height <span class="token operator">=</span> <span class="token number">7</span><span class="token punctuation">)</span>
 <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <h4 id="火山图绘制–形式五"><a href="#火山图绘制–形式五" class="headerlink" title="火山图绘制–形式五"></a>火山图绘制–形式五</h4><p><strong>效果如下</strong></p>
 <p><img src="https://s2.loli.net/2023/12/13/RONlEKIrv8GmneQ.png" alt="volcano5.png"></p>
 <p><strong>相关代码</strong></p>
-<pre class="line-numbers language-R"><code class="language-R">########## 双曲线火山图5 ############ 
-rm(list = ls())
-#相关R包载入：
-library(dplyr)
-library(ggplot2)
-library(ggrepel)
-library(patchwork)
+<pre class="line-numbers language-r"><code class="language-r"><span class="token comment" spellcheck="true">########## 双曲线火山图5 ############ </span>
+rm<span class="token punctuation">(</span>list <span class="token operator">=</span> ls<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true">#相关R包载入：</span>
+library<span class="token punctuation">(</span>dplyr<span class="token punctuation">)</span>
+library<span class="token punctuation">(</span>ggplot2<span class="token punctuation">)</span>
+library<span class="token punctuation">(</span>ggrepel<span class="token punctuation">)</span>
+library<span class="token punctuation">(</span>patchwork<span class="token punctuation">)</span>
 
-####----load data----####
-df <- read.table('diff_DEseq2.xls', header = TRUE, sep = "\t",row.names = 1)
+<span class="token comment" spellcheck="true">####----load data----####</span>
+df <span class="token operator">&lt;-</span> read.table<span class="token punctuation">(</span><span class="token string">'diff_DEseq2.xls'</span><span class="token punctuation">,</span> header <span class="token operator">=</span> <span class="token boolean">TRUE</span><span class="token punctuation">,</span> sep <span class="token operator">=</span> <span class="token string">"\t"</span><span class="token punctuation">,</span>row.names <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">)</span>
 
-##筛选阈值确定：p＜0.05，|log2FC|＞1
-padj = 0.05
-log2FC = 1
+<span class="token comment" spellcheck="true">##筛选阈值确定：p＜0.05，|log2FC|＞1</span>
+padj <span class="token operator">=</span> <span class="token number">0.05</span>
+log2FC <span class="token operator">=</span> <span class="token number">1</span>
 
-#根据反比例函数 y = 1/X和设定的阈值自定义双曲线函数：
-f <- function(x){
-  inputx <- seq(0.0001, x, by = 0.0001)
-  y <- 1/(inputx) + (-log10(padj))
-  dff <- rbind(data.frame(x = inputx + log2FC, y = y),
-               data.frame(x = -(inputx + log2FC), y = y))
-  return(dff)
-}
-#根据函数生成所需的曲线数组坐标：
-dff_curve <- f(5)
-head(dff_curve)
+<span class="token comment" spellcheck="true">#根据反比例函数 y = 1/X和设定的阈值自定义双曲线函数：</span>
+f <span class="token operator">&lt;-</span> <span class="token keyword">function</span><span class="token punctuation">(</span>x<span class="token punctuation">)</span><span class="token punctuation">{</span>
+  inputx <span class="token operator">&lt;-</span> seq<span class="token punctuation">(</span><span class="token number">0.0001</span><span class="token punctuation">,</span> x<span class="token punctuation">,</span> by <span class="token operator">=</span> <span class="token number">0.0001</span><span class="token punctuation">)</span>
+  y <span class="token operator">&lt;-</span> <span class="token number">1</span><span class="token operator">/</span><span class="token punctuation">(</span>inputx<span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token punctuation">(</span><span class="token operator">-</span>log10<span class="token punctuation">(</span>padj<span class="token punctuation">)</span><span class="token punctuation">)</span>
+  dff <span class="token operator">&lt;-</span> rbind<span class="token punctuation">(</span>data.frame<span class="token punctuation">(</span>x <span class="token operator">=</span> inputx <span class="token operator">+</span> log2FC<span class="token punctuation">,</span> y <span class="token operator">=</span> y<span class="token punctuation">)</span><span class="token punctuation">,</span>
+               data.frame<span class="token punctuation">(</span>x <span class="token operator">=</span> <span class="token operator">-</span><span class="token punctuation">(</span>inputx <span class="token operator">+</span> log2FC<span class="token punctuation">)</span><span class="token punctuation">,</span> y <span class="token operator">=</span> y<span class="token punctuation">)</span><span class="token punctuation">)</span>
+  return<span class="token punctuation">(</span>dff<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+<span class="token comment" spellcheck="true">#根据函数生成所需的曲线数组坐标：</span>
+dff_curve <span class="token operator">&lt;-</span> f<span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span>
+head<span class="token punctuation">(</span>dff_curve<span class="token punctuation">)</span>
 
-#新增曲线数值列：
-##每列log2FoldChange值在曲线上对应的y轴坐标；
-df$curve_y <- case_when(
-  df$log2FoldChange > 0 ~ 1/(df$log2FoldChange-log2FC) + (-log10(padj)),
-  df$log2FoldChange <= 0 ~ 1/(-df$log2FoldChange-log2FC) + (-log10(padj))
-)
-#根据曲线新增上下调分组标签：
-#转换为因子指定绘图顺序；
-df$`-log10(padj)` <- -log10(df$padj) #新增-log10p列
-df$group2 <- case_when(
-  df$`-log10(padj)` > df$curve_y & df$log2FoldChange >= log2FC ~ 'up',
-  df$`-log10(padj)` > df$curve_y & df$log2FoldChange <= -log2FC ~ 'down',
-  TRUE ~ 'none'
-)
-#绘制新双曲线阈值火山图：
-df$group2 <- factor(df$group2, levels = c("up","down","none")) #指定顺序
-mycol2 <- c("#F8B606","#4A1985","#d8d8d8")
+<span class="token comment" spellcheck="true">#新增曲线数值列：</span>
+<span class="token comment" spellcheck="true">##每列log2FoldChange值在曲线上对应的y轴坐标；</span>
+df<span class="token operator">$</span>curve_y <span class="token operator">&lt;-</span> case_when<span class="token punctuation">(</span>
+  df<span class="token operator">$</span>log2FoldChange <span class="token operator">></span> <span class="token number">0</span> <span class="token operator">~</span> <span class="token number">1</span><span class="token operator">/</span><span class="token punctuation">(</span>df<span class="token operator">$</span>log2FoldChange<span class="token operator">-</span>log2FC<span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token punctuation">(</span><span class="token operator">-</span>log10<span class="token punctuation">(</span>padj<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  df<span class="token operator">$</span>log2FoldChange <span class="token operator">&lt;=</span> <span class="token number">0</span> <span class="token operator">~</span> <span class="token number">1</span><span class="token operator">/</span><span class="token punctuation">(</span><span class="token operator">-</span>df<span class="token operator">$</span>log2FoldChange<span class="token operator">-</span>log2FC<span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token punctuation">(</span><span class="token operator">-</span>log10<span class="token punctuation">(</span>padj<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true">#根据曲线新增上下调分组标签：</span>
+<span class="token comment" spellcheck="true">#转换为因子指定绘图顺序；</span>
+df<span class="token operator">$</span>`<span class="token operator">-</span>log10<span class="token punctuation">(</span>padj<span class="token punctuation">)</span>` <span class="token operator">&lt;-</span> <span class="token operator">-</span>log10<span class="token punctuation">(</span>df<span class="token operator">$</span>padj<span class="token punctuation">)</span> <span class="token comment" spellcheck="true">#新增-log10p列</span>
+df<span class="token operator">$</span>group2 <span class="token operator">&lt;-</span> case_when<span class="token punctuation">(</span>
+  df<span class="token operator">$</span>`<span class="token operator">-</span>log10<span class="token punctuation">(</span>padj<span class="token punctuation">)</span>` <span class="token operator">></span> df<span class="token operator">$</span>curve_y <span class="token operator">&amp;</span> df<span class="token operator">$</span>log2FoldChange <span class="token operator">>=</span> log2FC <span class="token operator">~</span> <span class="token string">'up'</span><span class="token punctuation">,</span>
+  df<span class="token operator">$</span>`<span class="token operator">-</span>log10<span class="token punctuation">(</span>padj<span class="token punctuation">)</span>` <span class="token operator">></span> df<span class="token operator">$</span>curve_y <span class="token operator">&amp;</span> df<span class="token operator">$</span>log2FoldChange <span class="token operator">&lt;=</span> <span class="token operator">-</span>log2FC <span class="token operator">~</span> <span class="token string">'down'</span><span class="token punctuation">,</span>
+  <span class="token boolean">TRUE</span> <span class="token operator">~</span> <span class="token string">'none'</span>
+<span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true">#绘制新双曲线阈值火山图：</span>
+df<span class="token operator">$</span>group2 <span class="token operator">&lt;-</span> factor<span class="token punctuation">(</span>df<span class="token operator">$</span>group2<span class="token punctuation">,</span> levels <span class="token operator">=</span> c<span class="token punctuation">(</span><span class="token string">"up"</span><span class="token punctuation">,</span><span class="token string">"down"</span><span class="token punctuation">,</span><span class="token string">"none"</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">#指定顺序</span>
+mycol2 <span class="token operator">&lt;-</span> c<span class="token punctuation">(</span>"<span class="token comment" spellcheck="true">#F8B606","#4A1985","#d8d8d8")</span>
 
-#筛选显著性top10标签：
-top10 <- filter(df, group2 != "none") %>%
-  distinct(gene, .keep_all = T) %>%
-  top_n(10, abs(log2FoldChange))
+<span class="token comment" spellcheck="true">#筛选显著性top10标签：</span>
+top10 <span class="token operator">&lt;-</span> filter<span class="token punctuation">(</span>df<span class="token punctuation">,</span> group2 <span class="token operator">!=</span> <span class="token string">"none"</span><span class="token punctuation">)</span> <span class="token percent-operator operator">%>%</span>
+  distinct<span class="token punctuation">(</span>gene<span class="token punctuation">,</span> .keep_all <span class="token operator">=</span> T<span class="token punctuation">)</span> <span class="token percent-operator operator">%>%</span>
+  top_n<span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">,</span> abs<span class="token punctuation">(</span>log2FoldChange<span class="token punctuation">)</span><span class="token punctuation">)</span>
 
-ggplot(data = df,
-             aes(x = log2FoldChange, y = -log10(padj), color = group2)) + #使用新的分组
-  geom_point(size = 2.2) +
-  geom_text_repel(data = top10,
-                  aes(x = log2FoldChange, y = -log10(padj), label = gene),
-                  force = 80, color = 'black', size = 3.2,
-                  point.padding = 0.5, hjust = 0.5,
-                  arrow = arrow(length = unit(0.02, "npc"),
-                                type = "open", ends = "last"),
-                  segment.color="black",
-                  segment.size = 0.3,
-                  nudge_x = 0,
-                  nudge_y = 1) + 
-  # scale_x_continuous(limits = c(-4, 4), breaks = seq(-4, 4, by = 2)) +
-  scale_y_continuous(expand = expansion(add = c(2, 0)),
-                     limits = c(0, max(range(df$`-log10(padj)`))), 
-                     breaks = seq(0,max(range(df$`-log10(padj)`)), by = 10)) +
-  scale_colour_manual(name = "", values = alpha(mycol2, 0.7)) +
-  geom_line(data = dff_curve,
-            aes(x = x, y = y), #曲线坐标
-            color = "black",lty = "dashed", size = 0.7) +
-  theme_classic() +
-  theme(
-    axis.title = element_text(size = 15),
-    axis.text = element_text(size = 14),
-    legend.text = element_text(size = 14)
-  )
-####----save result----####
-ggsave('volcano5.png',dpi = 300,bg = 'white',width = 8,height = 7)
+ggplot<span class="token punctuation">(</span>data <span class="token operator">=</span> df<span class="token punctuation">,</span>
+             aes<span class="token punctuation">(</span>x <span class="token operator">=</span> log2FoldChange<span class="token punctuation">,</span> y <span class="token operator">=</span> <span class="token operator">-</span>log10<span class="token punctuation">(</span>padj<span class="token punctuation">)</span><span class="token punctuation">,</span> color <span class="token operator">=</span> group2<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token comment" spellcheck="true">#使用新的分组</span>
+  geom_point<span class="token punctuation">(</span>size <span class="token operator">=</span> <span class="token number">2.2</span><span class="token punctuation">)</span> <span class="token operator">+</span>
+  geom_text_repel<span class="token punctuation">(</span>data <span class="token operator">=</span> top10<span class="token punctuation">,</span>
+                  aes<span class="token punctuation">(</span>x <span class="token operator">=</span> log2FoldChange<span class="token punctuation">,</span> y <span class="token operator">=</span> <span class="token operator">-</span>log10<span class="token punctuation">(</span>padj<span class="token punctuation">)</span><span class="token punctuation">,</span> label <span class="token operator">=</span> gene<span class="token punctuation">)</span><span class="token punctuation">,</span>
+                  force <span class="token operator">=</span> <span class="token number">80</span><span class="token punctuation">,</span> color <span class="token operator">=</span> <span class="token string">'black'</span><span class="token punctuation">,</span> size <span class="token operator">=</span> <span class="token number">3.2</span><span class="token punctuation">,</span>
+                  point.padding <span class="token operator">=</span> <span class="token number">0.5</span><span class="token punctuation">,</span> hjust <span class="token operator">=</span> <span class="token number">0.5</span><span class="token punctuation">,</span>
+                  arrow <span class="token operator">=</span> arrow<span class="token punctuation">(</span>length <span class="token operator">=</span> unit<span class="token punctuation">(</span><span class="token number">0.02</span><span class="token punctuation">,</span> <span class="token string">"npc"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+                                type <span class="token operator">=</span> <span class="token string">"open"</span><span class="token punctuation">,</span> ends <span class="token operator">=</span> <span class="token string">"last"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+                  segment.color<span class="token operator">=</span><span class="token string">"black"</span><span class="token punctuation">,</span>
+                  segment.size <span class="token operator">=</span> <span class="token number">0.3</span><span class="token punctuation">,</span>
+                  nudge_x <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">,</span>
+                  nudge_y <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">+</span> 
+  <span class="token comment" spellcheck="true"># scale_x_continuous(limits = c(-4, 4), breaks = seq(-4, 4, by = 2)) +</span>
+  scale_y_continuous<span class="token punctuation">(</span>expand <span class="token operator">=</span> expansion<span class="token punctuation">(</span>add <span class="token operator">=</span> c<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+                     limits <span class="token operator">=</span> c<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> max<span class="token punctuation">(</span>range<span class="token punctuation">(</span>df<span class="token operator">$</span>`<span class="token operator">-</span>log10<span class="token punctuation">(</span>padj<span class="token punctuation">)</span>`<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span> 
+                     breaks <span class="token operator">=</span> seq<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span>max<span class="token punctuation">(</span>range<span class="token punctuation">(</span>df<span class="token operator">$</span>`<span class="token operator">-</span>log10<span class="token punctuation">(</span>padj<span class="token punctuation">)</span>`<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span> by <span class="token operator">=</span> <span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">+</span>
+  scale_colour_manual<span class="token punctuation">(</span>name <span class="token operator">=</span> <span class="token string">""</span><span class="token punctuation">,</span> values <span class="token operator">=</span> alpha<span class="token punctuation">(</span>mycol2<span class="token punctuation">,</span> <span class="token number">0.7</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">+</span>
+  geom_line<span class="token punctuation">(</span>data <span class="token operator">=</span> dff_curve<span class="token punctuation">,</span>
+            aes<span class="token punctuation">(</span>x <span class="token operator">=</span> x<span class="token punctuation">,</span> y <span class="token operator">=</span> y<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token comment" spellcheck="true">#曲线坐标</span>
+            color <span class="token operator">=</span> <span class="token string">"black"</span><span class="token punctuation">,</span>lty <span class="token operator">=</span> <span class="token string">"dashed"</span><span class="token punctuation">,</span> size <span class="token operator">=</span> <span class="token number">0.7</span><span class="token punctuation">)</span> <span class="token operator">+</span>
+  theme_classic<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span>
+  theme<span class="token punctuation">(</span>
+    axis.title <span class="token operator">=</span> element_text<span class="token punctuation">(</span>size <span class="token operator">=</span> <span class="token number">15</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    axis.text <span class="token operator">=</span> element_text<span class="token punctuation">(</span>size <span class="token operator">=</span> <span class="token number">14</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    legend.text <span class="token operator">=</span> element_text<span class="token punctuation">(</span>size <span class="token operator">=</span> <span class="token number">14</span><span class="token punctuation">)</span>
+  <span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true">####----save result----####</span>
+ggsave<span class="token punctuation">(</span><span class="token string">'volcano5.png'</span><span class="token punctuation">,</span>dpi <span class="token operator">=</span> <span class="token number">300</span><span class="token punctuation">,</span>bg <span class="token operator">=</span> <span class="token string">'white'</span><span class="token punctuation">,</span>width <span class="token operator">=</span> <span class="token number">8</span><span class="token punctuation">,</span>height <span class="token operator">=</span> <span class="token number">7</span><span class="token punctuation">)</span>
 <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <h4 id="火山图绘制–形式六"><a href="#火山图绘制–形式六" class="headerlink" title="火山图绘制–形式六"></a>火山图绘制–形式六</h4><p><strong>效果如下</strong></p>
 <p><img src="https://s2.loli.net/2023/12/13/1AVGngjLmSWqk9F.png" alt="Diagonal_volcano.png"></p>
 <p><strong>相关代码</strong></p>
-<pre class="line-numbers language-R"><code class="language-R">#### 对角火山图 #######
-rm(list = ls())
+<pre class="line-numbers language-r"><code class="language-r"><span class="token comment" spellcheck="true">#### 对角火山图 #######</span>
+rm<span class="token punctuation">(</span>list <span class="token operator">=</span> ls<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
 
-library(ImageGP)
-library(ggplot2)
-library(ggpubr)
-library(egg)
-library(ggrepel) #加标签
+library<span class="token punctuation">(</span>ImageGP<span class="token punctuation">)</span>
+library<span class="token punctuation">(</span>ggplot2<span class="token punctuation">)</span>
+library<span class="token punctuation">(</span>ggpubr<span class="token punctuation">)</span>
+library<span class="token punctuation">(</span>egg<span class="token punctuation">)</span>
+library<span class="token punctuation">(</span>ggrepel<span class="token punctuation">)</span> <span class="token comment" spellcheck="true">#加标签</span>
 
-diffexpr <- read.table('HG_data.txt',header = T,sep = '\t',check.names = F)
-diffexpr$CG_mean <- log10(rowMeans(diffexpr[,c(2:4)])+1)
-diffexpr$HG_mean <- log10(rowMeans(diffexpr[,c(5:7)])+1)
+diffexpr <span class="token operator">&lt;-</span> read.table<span class="token punctuation">(</span><span class="token string">'HG_data.txt'</span><span class="token punctuation">,</span>header <span class="token operator">=</span> T<span class="token punctuation">,</span>sep <span class="token operator">=</span> <span class="token string">'\t'</span><span class="token punctuation">,</span>check.names <span class="token operator">=</span> F<span class="token punctuation">)</span>
+diffexpr<span class="token operator">$</span>CG_mean <span class="token operator">&lt;-</span> log10<span class="token punctuation">(</span>rowMeans<span class="token punctuation">(</span>diffexpr<span class="token punctuation">[</span><span class="token punctuation">,</span>c<span class="token punctuation">(</span><span class="token number">2</span><span class="token operator">:</span><span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span>
+diffexpr<span class="token operator">$</span>HG_mean <span class="token operator">&lt;-</span> log10<span class="token punctuation">(</span>rowMeans<span class="token punctuation">(</span>diffexpr<span class="token punctuation">[</span><span class="token punctuation">,</span>c<span class="token punctuation">(</span><span class="token number">5</span><span class="token operator">:</span><span class="token number">7</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span>
 
-diffexpr$level <- ifelse(diffexpr$`p-value`<0.05, 
-                         ifelse(diffexpr$`log2(Fold_change)`>=1, "high glucose", 
-                                ifelse(diffexpr$`log2(Fold_change)`<=-1, "normal glucose", "NoSig")),"NoSig")
-head(diffexpr)
+diffexpr<span class="token operator">$</span>level <span class="token operator">&lt;-</span> ifelse<span class="token punctuation">(</span>diffexpr<span class="token operator">$</span>`p<span class="token operator">-</span>value`<span class="token operator">&lt;</span><span class="token number">0.05</span><span class="token punctuation">,</span> 
+                         ifelse<span class="token punctuation">(</span>diffexpr<span class="token operator">$</span>`log2<span class="token punctuation">(</span>Fold_change<span class="token punctuation">)</span>`<span class="token operator">>=</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">"high glucose"</span><span class="token punctuation">,</span> 
+                                ifelse<span class="token punctuation">(</span>diffexpr<span class="token operator">$</span>`log2<span class="token punctuation">(</span>Fold_change<span class="token punctuation">)</span>`<span class="token operator">&lt;=</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">"normal glucose"</span><span class="token punctuation">,</span> <span class="token string">"NoSig"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token string">"NoSig"</span><span class="token punctuation">)</span>
+head<span class="token punctuation">(</span>diffexpr<span class="token punctuation">)</span>
 
-##批量手动选择
-diffexpr  <- diffexpr %>% mutate(label = ifelse(gene %in% c("Nr4a1"),gene,""))
+<span class="token comment" spellcheck="true">##批量手动选择</span>
+diffexpr  <span class="token operator">&lt;-</span> diffexpr <span class="token percent-operator operator">%>%</span> mutate<span class="token punctuation">(</span>label <span class="token operator">=</span> ifelse<span class="token punctuation">(</span>gene <span class="token percent-operator operator">%in%</span> c<span class="token punctuation">(</span><span class="token string">"Nr4a1"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>gene<span class="token punctuation">,</span><span class="token string">""</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
 
 
-p <- sp_scatterplot(diffexpr, xvariable = "HG_mean", yvariable = "CG_mean", 
-                    color_variable = "level",
-                    color_variable_order = c("NoSig","high glucose", "normal glucose"),
-                    manual_color_vector = c("grey","firebrick","dodgerblue"),
-                    legend.position = c(0.2,0.8)) + coord_fixed(1) + 
-  labs(x = 'high glucose log10(mean normalized reads + 1)',
-       y = 'normal glucose log10(mean normalized reads + 1)')+
-  geom_label_repel(aes(label = label),show.legend = F, 
-                   size = 3, box.padding = 2,max.overlaps = 10000)
+p <span class="token operator">&lt;-</span> sp_scatterplot<span class="token punctuation">(</span>diffexpr<span class="token punctuation">,</span> xvariable <span class="token operator">=</span> <span class="token string">"HG_mean"</span><span class="token punctuation">,</span> yvariable <span class="token operator">=</span> <span class="token string">"CG_mean"</span><span class="token punctuation">,</span> 
+                    color_variable <span class="token operator">=</span> <span class="token string">"level"</span><span class="token punctuation">,</span>
+                    color_variable_order <span class="token operator">=</span> c<span class="token punctuation">(</span><span class="token string">"NoSig"</span><span class="token punctuation">,</span><span class="token string">"high glucose"</span><span class="token punctuation">,</span> <span class="token string">"normal glucose"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+                    manual_color_vector <span class="token operator">=</span> c<span class="token punctuation">(</span><span class="token string">"grey"</span><span class="token punctuation">,</span><span class="token string">"firebrick"</span><span class="token punctuation">,</span><span class="token string">"dodgerblue"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+                    legend.position <span class="token operator">=</span> c<span class="token punctuation">(</span><span class="token number">0.2</span><span class="token punctuation">,</span><span class="token number">0.8</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">+</span> coord_fixed<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">+</span> 
+  labs<span class="token punctuation">(</span>x <span class="token operator">=</span> <span class="token string">'high glucose log10(mean normalized reads + 1)'</span><span class="token punctuation">,</span>
+       y <span class="token operator">=</span> <span class="token string">'normal glucose log10(mean normalized reads + 1)'</span><span class="token punctuation">)</span><span class="token operator">+</span>
+  geom_label_repel<span class="token punctuation">(</span>aes<span class="token punctuation">(</span>label <span class="token operator">=</span> label<span class="token punctuation">)</span><span class="token punctuation">,</span>show.legend <span class="token operator">=</span> F<span class="token punctuation">,</span> 
+                   size <span class="token operator">=</span> <span class="token number">3</span><span class="token punctuation">,</span> box.padding <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">,</span>max.overlaps <span class="token operator">=</span> <span class="token number">10000</span><span class="token punctuation">)</span>
 
-xplot <- ggplot(diffexpr, aes(x=HG_mean)) + geom_histogram(fill="firebrick") +
-  theme_classic() + 
-  theme(axis.line.x=element_blank(), 
-        axis.ticks.x=element_blank(), 
-        axis.text.x = element_blank(), 
-        axis.title.x = element_blank(),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.border = element_blank(),
-        panel.background = element_blank(),
-        legend.title = element_blank(),
-        legend.position = c(0.75,0.85),
-        #legend.title = element_text(size = 5), 
-        legend.text  = element_text(size = 8),
-        legend.key.size = unit(0.5, "lines"),
-        legend.spacing = unit(0.3, "cm"),
-  ) + ylab("Density")
+xplot <span class="token operator">&lt;-</span> ggplot<span class="token punctuation">(</span>diffexpr<span class="token punctuation">,</span> aes<span class="token punctuation">(</span>x<span class="token operator">=</span>HG_mean<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">+</span> geom_histogram<span class="token punctuation">(</span>fill<span class="token operator">=</span><span class="token string">"firebrick"</span><span class="token punctuation">)</span> <span class="token operator">+</span>
+  theme_classic<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> 
+  theme<span class="token punctuation">(</span>axis.line.x<span class="token operator">=</span>element_blank<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> 
+        axis.ticks.x<span class="token operator">=</span>element_blank<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> 
+        axis.text.x <span class="token operator">=</span> element_blank<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> 
+        axis.title.x <span class="token operator">=</span> element_blank<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        panel.grid.major <span class="token operator">=</span> element_blank<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        panel.grid.minor <span class="token operator">=</span> element_blank<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        panel.border <span class="token operator">=</span> element_blank<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        panel.background <span class="token operator">=</span> element_blank<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        legend.title <span class="token operator">=</span> element_blank<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        legend.position <span class="token operator">=</span> c<span class="token punctuation">(</span><span class="token number">0.75</span><span class="token punctuation">,</span><span class="token number">0.85</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        <span class="token comment" spellcheck="true">#legend.title = element_text(size = 5), </span>
+        legend.text  <span class="token operator">=</span> element_text<span class="token punctuation">(</span>size <span class="token operator">=</span> <span class="token number">8</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        legend.key.size <span class="token operator">=</span> unit<span class="token punctuation">(</span><span class="token number">0.5</span><span class="token punctuation">,</span> <span class="token string">"lines"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        legend.spacing <span class="token operator">=</span> unit<span class="token punctuation">(</span><span class="token number">0.3</span><span class="token punctuation">,</span> <span class="token string">"cm"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token punctuation">)</span> <span class="token operator">+</span> ylab<span class="token punctuation">(</span><span class="token string">"Density"</span><span class="token punctuation">)</span>
 
-yplot <- ggplot(diffexpr, aes(x=CG_mean)) + geom_histogram(fill="dodgerblue") +
-  theme_classic() +
-  theme(axis.line.y=element_blank(),  
-        axis.ticks.y=element_blank(), 
-        axis.text.y = element_blank(), 
-        axis.title.y=element_blank(),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.border = element_blank(),
-        panel.background = element_blank(),
-        legend.title = element_blank(),
-        legend.position = c(0.7,0.8),
-        #legend.title = element_text(size = 5), 
-        legend.text  = element_text(size = 8),
-        legend.key.size = unit(0.5, "lines"),
-        legend.spacing = unit(0.3, "cm"),
-  ) + ylab("Density") +
-  rotate()
+yplot <span class="token operator">&lt;-</span> ggplot<span class="token punctuation">(</span>diffexpr<span class="token punctuation">,</span> aes<span class="token punctuation">(</span>x<span class="token operator">=</span>CG_mean<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">+</span> geom_histogram<span class="token punctuation">(</span>fill<span class="token operator">=</span><span class="token string">"dodgerblue"</span><span class="token punctuation">)</span> <span class="token operator">+</span>
+  theme_classic<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span>
+  theme<span class="token punctuation">(</span>axis.line.y<span class="token operator">=</span>element_blank<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>  
+        axis.ticks.y<span class="token operator">=</span>element_blank<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> 
+        axis.text.y <span class="token operator">=</span> element_blank<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> 
+        axis.title.y<span class="token operator">=</span>element_blank<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        panel.grid.major <span class="token operator">=</span> element_blank<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        panel.grid.minor <span class="token operator">=</span> element_blank<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        panel.border <span class="token operator">=</span> element_blank<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        panel.background <span class="token operator">=</span> element_blank<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        legend.title <span class="token operator">=</span> element_blank<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        legend.position <span class="token operator">=</span> c<span class="token punctuation">(</span><span class="token number">0.7</span><span class="token punctuation">,</span><span class="token number">0.8</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        <span class="token comment" spellcheck="true">#legend.title = element_text(size = 5), </span>
+        legend.text  <span class="token operator">=</span> element_text<span class="token punctuation">(</span>size <span class="token operator">=</span> <span class="token number">8</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        legend.key.size <span class="token operator">=</span> unit<span class="token punctuation">(</span><span class="token number">0.5</span><span class="token punctuation">,</span> <span class="token string">"lines"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        legend.spacing <span class="token operator">=</span> unit<span class="token punctuation">(</span><span class="token number">0.3</span><span class="token punctuation">,</span> <span class="token string">"cm"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token punctuation">)</span> <span class="token operator">+</span> ylab<span class="token punctuation">(</span><span class="token string">"Density"</span><span class="token punctuation">)</span> <span class="token operator">+</span>
+  rotate<span class="token punctuation">(</span><span class="token punctuation">)</span>
 
-white <- ggplot() + theme_void()
+white <span class="token operator">&lt;-</span> ggplot<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> theme_void<span class="token punctuation">(</span><span class="token punctuation">)</span>
 
-pc <- egg::ggarrange(xplot, white, p, yplot, 
-                     widths=c(5,2),heights = c(2,5),padding=unit(0,"line"))
-ggsave('Diagonal_volcano.png',pc,dpi = 300,bg = 'white',width = 8,height = 7)
+pc <span class="token operator">&lt;-</span> egg<span class="token operator">::</span>ggarrange<span class="token punctuation">(</span>xplot<span class="token punctuation">,</span> white<span class="token punctuation">,</span> p<span class="token punctuation">,</span> yplot<span class="token punctuation">,</span> 
+                     widths<span class="token operator">=</span>c<span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">,</span>heights <span class="token operator">=</span> c<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">,</span>padding<span class="token operator">=</span>unit<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token string">"line"</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+ggsave<span class="token punctuation">(</span><span class="token string">'Diagonal_volcano.png'</span><span class="token punctuation">,</span>pc<span class="token punctuation">,</span>dpi <span class="token operator">=</span> <span class="token number">300</span><span class="token punctuation">,</span>bg <span class="token operator">=</span> <span class="token string">'white'</span><span class="token punctuation">,</span>width <span class="token operator">=</span> <span class="token number">8</span><span class="token punctuation">,</span>height <span class="token operator">=</span> <span class="token number">7</span><span class="token punctuation">)</span>
 <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <h4 id="火山图绘制–形式七"><a href="#火山图绘制–形式七" class="headerlink" title="火山图绘制–形式七"></a>火山图绘制–形式七</h4><p><strong>效果如下</strong></p>
 <p><img src="https://s2.loli.net/2023/12/13/1t7GRAJfmPdeYST.png" alt="volcano6.png"></p>
 <p><strong>相关代码</strong></p>
-<pre class="line-numbers language-R"><code class="language-R">######## 多分组多条件 火山图
-library(scRNAtoolVis)
-rm(list = ls())
+<pre class="line-numbers language-r"><code class="language-r"><span class="token comment" spellcheck="true">######## 多分组多条件 火山图</span>
+library<span class="token punctuation">(</span>scRNAtoolVis<span class="token punctuation">)</span>
+rm<span class="token punctuation">(</span>list <span class="token operator">=</span> ls<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
 
-DEG1 <- read.table('PN-Normal_DEGs.xls',row.names = 1,header = T,sep = '\t')
-DEG1$cluster <- 'PN-Normal'
+DEG1 <span class="token operator">&lt;-</span> read.table<span class="token punctuation">(</span><span class="token string">'PN-Normal_DEGs.xls'</span><span class="token punctuation">,</span>row.names <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">,</span>header <span class="token operator">=</span> T<span class="token punctuation">,</span>sep <span class="token operator">=</span> <span class="token string">'\t'</span><span class="token punctuation">)</span>
+DEG1<span class="token operator">$</span>cluster <span class="token operator">&lt;-</span> <span class="token string">'PN-Normal'</span>
 
-DEG2 <- read.table('Psoriasis-Normal_DEGs.xls',row.names = 1,header = T,sep = '\t')
-DEG2$cluster <- 'Psoriasis-Normal'
+DEG2 <span class="token operator">&lt;-</span> read.table<span class="token punctuation">(</span><span class="token string">'Psoriasis-Normal_DEGs.xls'</span><span class="token punctuation">,</span>row.names <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">,</span>header <span class="token operator">=</span> T<span class="token punctuation">,</span>sep <span class="token operator">=</span> <span class="token string">'\t'</span><span class="token punctuation">)</span>
+DEG2<span class="token operator">$</span>cluster <span class="token operator">&lt;-</span> <span class="token string">'Psoriasis-Normal'</span>
 
-DEG3 <- read.table('Psoriasis-PN_DEGs.xls',row.names = 1,header = T,sep = '\t')
-DEG3$cluster <- 'Psoriasis-PN'
+DEG3 <span class="token operator">&lt;-</span> read.table<span class="token punctuation">(</span><span class="token string">'Psoriasis-PN_DEGs.xls'</span><span class="token punctuation">,</span>row.names <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">,</span>header <span class="token operator">=</span> T<span class="token punctuation">,</span>sep <span class="token operator">=</span> <span class="token string">'\t'</span><span class="token punctuation">)</span>
+DEG3<span class="token operator">$</span>cluster <span class="token operator">&lt;-</span> <span class="token string">'Psoriasis-PN'</span>
 
-# rbind
-markers <- rbind(DEG1,DEG2,DEG3)
-colnames(markers)[1] <- 'avg_log2FC'
-colnames(markers)[4] <- 'p_val'
-colnames(markers)[5] <- 'p_val_adj'
+<span class="token comment" spellcheck="true"># rbind</span>
+markers <span class="token operator">&lt;-</span> rbind<span class="token punctuation">(</span>DEG1<span class="token punctuation">,</span>DEG2<span class="token punctuation">,</span>DEG3<span class="token punctuation">)</span>
+colnames<span class="token punctuation">(</span>markers<span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">&lt;-</span> <span class="token string">'avg_log2FC'</span>
+colnames<span class="token punctuation">(</span>markers<span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">4</span><span class="token punctuation">]</span> <span class="token operator">&lt;-</span> <span class="token string">'p_val'</span>
+colnames<span class="token punctuation">(</span>markers<span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">5</span><span class="token punctuation">]</span> <span class="token operator">&lt;-</span> <span class="token string">'p_val_adj'</span>
 
-library(paletteer) 
-col <- paletteer_d("khroma::light")
+library<span class="token punctuation">(</span>paletteer<span class="token punctuation">)</span> 
+col <span class="token operator">&lt;-</span> paletteer_d<span class="token punctuation">(</span><span class="token string">"khroma::light"</span><span class="token punctuation">)</span>
 
-# change aes color type
-jjVolcano(diffData = markers,
-          log2FC.cutoff = 0.5,
-          tile.col = col[3:5],
-          pSize = 2,
-          #col.type = "adjustP",
-          size  = 3,
-          fontface = 'italic',
-          legend.position = c(0.1,0.9),
-          topGeneN = 5)
-ggsave('volcano6.png',dpi = 300,bg = 'white',width = 8,height = 7)
+<span class="token comment" spellcheck="true"># change aes color type</span>
+jjVolcano<span class="token punctuation">(</span>diffData <span class="token operator">=</span> markers<span class="token punctuation">,</span>
+          log2FC.cutoff <span class="token operator">=</span> <span class="token number">0.5</span><span class="token punctuation">,</span>
+          tile.col <span class="token operator">=</span> col<span class="token punctuation">[</span><span class="token number">3</span><span class="token operator">:</span><span class="token number">5</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+          pSize <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">,</span>
+          <span class="token comment" spellcheck="true">#col.type = "adjustP",</span>
+          size  <span class="token operator">=</span> <span class="token number">3</span><span class="token punctuation">,</span>
+          fontface <span class="token operator">=</span> <span class="token string">'italic'</span><span class="token punctuation">,</span>
+          legend.position <span class="token operator">=</span> c<span class="token punctuation">(</span><span class="token number">0.1</span><span class="token punctuation">,</span><span class="token number">0.9</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+          topGeneN <span class="token operator">=</span> <span class="token number">5</span><span class="token punctuation">)</span>
+ggsave<span class="token punctuation">(</span><span class="token string">'volcano6.png'</span><span class="token punctuation">,</span>dpi <span class="token operator">=</span> <span class="token number">300</span><span class="token punctuation">,</span>bg <span class="token operator">=</span> <span class="token string">'white'</span><span class="token punctuation">,</span>width <span class="token operator">=</span> <span class="token number">8</span><span class="token punctuation">,</span>height <span class="token operator">=</span> <span class="token number">7</span><span class="token punctuation">)</span>
 <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <h4 id="火山图绘制–形式八"><a href="#火山图绘制–形式八" class="headerlink" title="火山图绘制–形式八"></a>火山图绘制–形式八</h4><p><strong>效果如下</strong></p>
 <p><img src="https://s2.loli.net/2023/12/13/OnrVGZqMN9oD4W3.png" alt="volcano7.png"></p>
 <p><strong>相关代码</strong></p>
-<pre class="line-numbers language-R"><code class="language-R">######### 自定义函数 ######### 
-color.pals = c("#DC143C","#0000FF","#20B2AA","#FFA500","#9370DB","#98FB98","#F08080","#1E90FF","#7CFC00","#FFFF00","#808000","#FF00FF","#FA8072","#7B68EE","#9400D3","#800080","#A0522D","#D2B48C","#D2691E","#87CEEB","#40E0D0","#5F9EA0","#FF1493","#0000CD","#008B8B","#FFE4B5","#8A2BE2","#228B22","#E9967A","#4682B4","#32CD32","#F0E68C","#FFFFE0","#EE82EE","#FF6347","#6A5ACD","#9932CC","#8B008B","#8B4513","#DEB887")
+<pre class="line-numbers language-r"><code class="language-r"><span class="token comment" spellcheck="true">######### 自定义函数 ######### </span>
+color.pals <span class="token operator">=</span> c<span class="token punctuation">(</span>"<span class="token comment" spellcheck="true">#DC143C","#0000FF","#20B2AA","#FFA500","#9370DB","#98FB98","#F08080","#1E90FF","#7CFC00","#FFFF00","#808000","#FF00FF","#FA8072","#7B68EE","#9400D3","#800080","#A0522D","#D2B48C","#D2691E","#87CEEB","#40E0D0","#5F9EA0","#FF1493","#0000CD","#008B8B","#FFE4B5","#8A2BE2","#228B22","#E9967A","#4682B4","#32CD32","#F0E68C","#FFFFE0","#EE82EE","#FF6347","#6A5ACD","#9932CC","#8B008B","#8B4513","#DEB887")</span>
 
 
-#
-#' multi volcano plot for scRNA-seq
-#' @version 0.2 change legend order
-#' @version 0.3 add max_overlaps for annotation
-#'
-#' @param dat Seurat FindAllMarkers returns, must set only.pos = F;
-#' @param color.arr color list, default same as Seurat
-#' @param onlyAnnotateUp only annote gene symbols for up genes
-#' @param log2Foldchang threshold for annotation
-#' @param adjp  threshold for annotation
-#' @param top_marker gene number for annotation
-#' @param max_overlaps annotation label overlapping
-#'
-#' @return ggplot2 obj
-#' @export
-#'
-#' @examples
-multiVolcanoPlot = function(dat, color.arr=NULL, onlyAnnotateUp=T,
-                            log2Foldchang=0.58, adjp=0.05, top_marker=5, 
-                            max_overlaps=10, width=0.9){
-  library(dplyr)
-  library(ggrepel)
-  # set default color list
-  if(is.null(color.arr)){
-    len = length(unique(dat$cluster))
-    color.arr=scales::hue_pal()(len)
-  }
+<span class="token comment" spellcheck="true">#</span>
+<span class="token comment" spellcheck="true">#' multi volcano plot for scRNA-seq</span>
+<span class="token comment" spellcheck="true">#' @version 0.2 change legend order</span>
+<span class="token comment" spellcheck="true">#' @version 0.3 add max_overlaps for annotation</span>
+<span class="token comment" spellcheck="true">#'</span>
+<span class="token comment" spellcheck="true">#' @param dat Seurat FindAllMarkers returns, must set only.pos = F;</span>
+<span class="token comment" spellcheck="true">#' @param color.arr color list, default same as Seurat</span>
+<span class="token comment" spellcheck="true">#' @param onlyAnnotateUp only annote gene symbols for up genes</span>
+<span class="token comment" spellcheck="true">#' @param log2Foldchang threshold for annotation</span>
+<span class="token comment" spellcheck="true">#' @param adjp  threshold for annotation</span>
+<span class="token comment" spellcheck="true">#' @param top_marker gene number for annotation</span>
+<span class="token comment" spellcheck="true">#' @param max_overlaps annotation label overlapping</span>
+<span class="token comment" spellcheck="true">#'</span>
+<span class="token comment" spellcheck="true">#' @return ggplot2 obj</span>
+<span class="token comment" spellcheck="true">#' @export</span>
+<span class="token comment" spellcheck="true">#'</span>
+<span class="token comment" spellcheck="true">#' @examples</span>
+multiVolcanoPlot <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span>dat<span class="token punctuation">,</span> color.arr<span class="token operator">=</span><span class="token keyword">NULL</span><span class="token punctuation">,</span> onlyAnnotateUp<span class="token operator">=</span>T<span class="token punctuation">,</span>
+                            log2Foldchang<span class="token operator">=</span><span class="token number">0.58</span><span class="token punctuation">,</span> adjp<span class="token operator">=</span><span class="token number">0.05</span><span class="token punctuation">,</span> top_marker<span class="token operator">=</span><span class="token number">5</span><span class="token punctuation">,</span> 
+                            max_overlaps<span class="token operator">=</span><span class="token number">10</span><span class="token punctuation">,</span> width<span class="token operator">=</span><span class="token number">0.9</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+  library<span class="token punctuation">(</span>dplyr<span class="token punctuation">)</span>
+  library<span class="token punctuation">(</span>ggrepel<span class="token punctuation">)</span>
+  <span class="token comment" spellcheck="true"># set default color list</span>
+  <span class="token keyword">if</span><span class="token punctuation">(</span>is.null<span class="token punctuation">(</span>color.arr<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+    len <span class="token operator">=</span> length<span class="token punctuation">(</span>unique<span class="token punctuation">(</span>dat<span class="token operator">$</span>cluster<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    color.arr<span class="token operator">=</span>scales<span class="token operator">::</span>hue_pal<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">(</span>len<span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
   
-  dat.plot <- dat %>% mutate(
-    "significance"=case_when(p_val_adj < adjp & avg_log2FC >= log2Foldchang  ~ 'Up',
-                             p_val_adj < adjp & avg_log2FC <= -log2Foldchang  ~ 'Down',
-                             TRUE ~ 'None'))
-  tbl = table(dat.plot$significance)
-  print( tbl )
-  background.dat <- data.frame(
-    dat.plot %>% group_by(cluster) %>% filter(avg_log2FC>0) %>%
-      summarise("y.localup"=max(avg_log2FC)),
-    dat.plot %>% group_by(cluster) %>% filter(avg_log2FC<=0) %>%
-      summarise("y.localdown"=min(avg_log2FC)),
-    x.local=seq(1:length(unique(dat.plot$cluster)))
-  ) %>% select(-cluster.1)
-  #names(background.dat)
-  #head(background.dat)
-  #dim(background.dat)
+  dat.plot <span class="token operator">&lt;-</span> dat <span class="token percent-operator operator">%>%</span> mutate<span class="token punctuation">(</span>
+    <span class="token string">"significance"</span><span class="token operator">=</span>case_when<span class="token punctuation">(</span>p_val_adj <span class="token operator">&lt;</span> adjp <span class="token operator">&amp;</span> avg_log2FC <span class="token operator">>=</span> log2Foldchang  <span class="token operator">~</span> <span class="token string">'Up'</span><span class="token punctuation">,</span>
+                             p_val_adj <span class="token operator">&lt;</span> adjp <span class="token operator">&amp;</span> avg_log2FC <span class="token operator">&lt;=</span> <span class="token operator">-</span>log2Foldchang  <span class="token operator">~</span> <span class="token string">'Down'</span><span class="token punctuation">,</span>
+                             <span class="token boolean">TRUE</span> <span class="token operator">~</span> <span class="token string">'None'</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+  tbl <span class="token operator">=</span> table<span class="token punctuation">(</span>dat.plot<span class="token operator">$</span>significance<span class="token punctuation">)</span>
+  print<span class="token punctuation">(</span> tbl <span class="token punctuation">)</span>
+  background.dat <span class="token operator">&lt;-</span> data.frame<span class="token punctuation">(</span>
+    dat.plot <span class="token percent-operator operator">%>%</span> group_by<span class="token punctuation">(</span>cluster<span class="token punctuation">)</span> <span class="token percent-operator operator">%>%</span> filter<span class="token punctuation">(</span>avg_log2FC<span class="token operator">></span><span class="token number">0</span><span class="token punctuation">)</span> <span class="token percent-operator operator">%>%</span>
+      summarise<span class="token punctuation">(</span><span class="token string">"y.localup"</span><span class="token operator">=</span>max<span class="token punctuation">(</span>avg_log2FC<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    dat.plot <span class="token percent-operator operator">%>%</span> group_by<span class="token punctuation">(</span>cluster<span class="token punctuation">)</span> <span class="token percent-operator operator">%>%</span> filter<span class="token punctuation">(</span>avg_log2FC<span class="token operator">&lt;=</span><span class="token number">0</span><span class="token punctuation">)</span> <span class="token percent-operator operator">%>%</span>
+      summarise<span class="token punctuation">(</span><span class="token string">"y.localdown"</span><span class="token operator">=</span>min<span class="token punctuation">(</span>avg_log2FC<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    x.local<span class="token operator">=</span>seq<span class="token punctuation">(</span><span class="token number">1</span><span class="token operator">:</span>length<span class="token punctuation">(</span>unique<span class="token punctuation">(</span>dat.plot<span class="token operator">$</span>cluster<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token punctuation">)</span> <span class="token percent-operator operator">%>%</span> select<span class="token punctuation">(</span><span class="token operator">-</span>cluster<span class="token number">.1</span><span class="token punctuation">)</span>
+  <span class="token comment" spellcheck="true">#names(background.dat)</span>
+  <span class="token comment" spellcheck="true">#head(background.dat)</span>
+  <span class="token comment" spellcheck="true">#dim(background.dat)</span>
   
-  #
-  x.number <- background.dat %>% select(cluster, x.local)
-  dat.plot <- dat.plot%>% left_join(x.number,by = "cluster")
-  #names(dat.plot)
-  #head(dat.plot)
+  <span class="token comment" spellcheck="true">#</span>
+  x.number <span class="token operator">&lt;-</span> background.dat <span class="token percent-operator operator">%>%</span> select<span class="token punctuation">(</span>cluster<span class="token punctuation">,</span> x.local<span class="token punctuation">)</span>
+  dat.plot <span class="token operator">&lt;-</span> dat.plot<span class="token percent-operator operator">%>%</span> left_join<span class="token punctuation">(</span>x.number<span class="token punctuation">,</span>by <span class="token operator">=</span> <span class="token string">"cluster"</span><span class="token punctuation">)</span>
+  <span class="token comment" spellcheck="true">#names(dat.plot)</span>
+  <span class="token comment" spellcheck="true">#head(dat.plot)</span>
   
-  #selecting top-up and top-down proteins
-  dat.marked.up <- dat.plot %>% filter(significance=="Up") %>%
-    group_by(cluster) %>% arrange(-avg_log2FC) %>%
-    top_n(top_marker,abs(avg_log2FC))
-  dat.marked.down <- dat.plot %>% filter(significance=="Down") %>%
-    group_by(cluster) %>% arrange(avg_log2FC) %>%
-    top_n(top_marker,abs(avg_log2FC))
-  dat.marked <- dat.marked.up %>% bind_rows(dat.marked.down)
-  #referring group information data
-  dat.infor <- background.dat %>%
-    mutate("y.infor"=rep(0,length(cluster)))
-  #names(dat.infor)
-  #dim(dat.infor)
-  #head(dat.infor)
+  <span class="token comment" spellcheck="true">#selecting top-up and top-down proteins</span>
+  dat.marked.up <span class="token operator">&lt;-</span> dat.plot <span class="token percent-operator operator">%>%</span> filter<span class="token punctuation">(</span>significance<span class="token operator">==</span><span class="token string">"Up"</span><span class="token punctuation">)</span> <span class="token percent-operator operator">%>%</span>
+    group_by<span class="token punctuation">(</span>cluster<span class="token punctuation">)</span> <span class="token percent-operator operator">%>%</span> arrange<span class="token punctuation">(</span><span class="token operator">-</span>avg_log2FC<span class="token punctuation">)</span> <span class="token percent-operator operator">%>%</span>
+    top_n<span class="token punctuation">(</span>top_marker<span class="token punctuation">,</span>abs<span class="token punctuation">(</span>avg_log2FC<span class="token punctuation">)</span><span class="token punctuation">)</span>
+  dat.marked.down <span class="token operator">&lt;-</span> dat.plot <span class="token percent-operator operator">%>%</span> filter<span class="token punctuation">(</span>significance<span class="token operator">==</span><span class="token string">"Down"</span><span class="token punctuation">)</span> <span class="token percent-operator operator">%>%</span>
+    group_by<span class="token punctuation">(</span>cluster<span class="token punctuation">)</span> <span class="token percent-operator operator">%>%</span> arrange<span class="token punctuation">(</span>avg_log2FC<span class="token punctuation">)</span> <span class="token percent-operator operator">%>%</span>
+    top_n<span class="token punctuation">(</span>top_marker<span class="token punctuation">,</span>abs<span class="token punctuation">(</span>avg_log2FC<span class="token punctuation">)</span><span class="token punctuation">)</span>
+  dat.marked <span class="token operator">&lt;-</span> dat.marked.up <span class="token percent-operator operator">%>%</span> bind_rows<span class="token punctuation">(</span>dat.marked.down<span class="token punctuation">)</span>
+  <span class="token comment" spellcheck="true">#referring group information data</span>
+  dat.infor <span class="token operator">&lt;-</span> background.dat <span class="token percent-operator operator">%>%</span>
+    mutate<span class="token punctuation">(</span><span class="token string">"y.infor"</span><span class="token operator">=</span>rep<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span>length<span class="token punctuation">(</span>cluster<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token comment" spellcheck="true">#names(dat.infor)</span>
+  <span class="token comment" spellcheck="true">#dim(dat.infor)</span>
+  <span class="token comment" spellcheck="true">#head(dat.infor)</span>
   
-  ##plotting:
-  #setting color by loading local color schemes
-  vol.plot <- ggplot()+
-    # background
-    geom_col(background.dat,mapping=aes(x.local, y.localup),
-             fill="grey80", alpha=0.2, width=0.9, just = 0.5)+
-    geom_col(background.dat,mapping=aes(x.local,y.localdown),
-             fill="grey80", alpha=0.2, width=0.9, just = 0.5)+
-    # point plot
-    geom_jitter(dat.plot, mapping=aes(x.local, avg_log2FC, #x= should be number, Not string or factor
-                                      color=significance),
-                size=0.8, width = 0.4, alpha= 1)+
-    scale_color_manual(name="significance", 
-                       breaks = c('Up', 'None', 'Down'),
-                       values = c("#d56e5e","#cccccc", "#5390b5")) + #set color for: Down None   Up
-    geom_tile(dat.infor, mapping=aes(x.local, y.infor), #x axis color box
-              height = log2Foldchang*1.3,
-              fill = color.arr[1:length(unique(dat.plot$cluster))],
-              alpha = 0.5,
-              width=width) +
-    labs(x=NULL,y="log2 Fold change")+
-    geom_text(dat.infor, mapping=aes(x.local,y.infor,label=cluster))+
-    # Down is not recommend, not meaningful, hard to explain; so prefer dat.marked.up to dat.marked
-    ggrepel::geom_label_repel(data=if(onlyAnnotateUp) dat.marked.up else dat.marked, #gene symbol, of up group default
-                              mapping=aes(x=x.local, y=avg_log2FC, label=gene),
-                              force = 2, #size=2,
-                              max.overlaps = max_overlaps,
-                              label.size = 0, #no border
-                              fill="#00000000", #box fill color
-                              seed = 233,
-                              min.segment.length = 0,
-                              force_pull = 2,
-                              box.padding = 0.1,
-                              segment.linetype = 3,
-                              #segment.color = 'black',
-                              #segment.alpha = 0.5,
-                              #direction = "x", #line direction
-                              hjust = 0.5)+
-    annotate("text", x=1.5, y=max(background.dat$y.localup)+1,
-             label=paste0("|log2FC|>=", log2Foldchang, " & FDR<", adjp))+
-    theme_classic(base_size = 12)+
+  <span class="token comment" spellcheck="true">##plotting:</span>
+  <span class="token comment" spellcheck="true">#setting color by loading local color schemes</span>
+  vol.plot <span class="token operator">&lt;-</span> ggplot<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">+</span>
+    <span class="token comment" spellcheck="true"># background</span>
+    geom_col<span class="token punctuation">(</span>background.dat<span class="token punctuation">,</span>mapping<span class="token operator">=</span>aes<span class="token punctuation">(</span>x.local<span class="token punctuation">,</span> y.localup<span class="token punctuation">)</span><span class="token punctuation">,</span>
+             fill<span class="token operator">=</span><span class="token string">"grey80"</span><span class="token punctuation">,</span> alpha<span class="token operator">=</span><span class="token number">0.2</span><span class="token punctuation">,</span> width<span class="token operator">=</span><span class="token number">0.9</span><span class="token punctuation">,</span> just <span class="token operator">=</span> <span class="token number">0.5</span><span class="token punctuation">)</span><span class="token operator">+</span>
+    geom_col<span class="token punctuation">(</span>background.dat<span class="token punctuation">,</span>mapping<span class="token operator">=</span>aes<span class="token punctuation">(</span>x.local<span class="token punctuation">,</span>y.localdown<span class="token punctuation">)</span><span class="token punctuation">,</span>
+             fill<span class="token operator">=</span><span class="token string">"grey80"</span><span class="token punctuation">,</span> alpha<span class="token operator">=</span><span class="token number">0.2</span><span class="token punctuation">,</span> width<span class="token operator">=</span><span class="token number">0.9</span><span class="token punctuation">,</span> just <span class="token operator">=</span> <span class="token number">0.5</span><span class="token punctuation">)</span><span class="token operator">+</span>
+    <span class="token comment" spellcheck="true"># point plot</span>
+    geom_jitter<span class="token punctuation">(</span>dat.plot<span class="token punctuation">,</span> mapping<span class="token operator">=</span>aes<span class="token punctuation">(</span>x.local<span class="token punctuation">,</span> avg_log2FC<span class="token punctuation">,</span> <span class="token comment" spellcheck="true">#x= should be number, Not string or factor</span>
+                                      color<span class="token operator">=</span>significance<span class="token punctuation">)</span><span class="token punctuation">,</span>
+                size<span class="token operator">=</span><span class="token number">0.8</span><span class="token punctuation">,</span> width <span class="token operator">=</span> <span class="token number">0.4</span><span class="token punctuation">,</span> alpha<span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token operator">+</span>
+    scale_color_manual<span class="token punctuation">(</span>name<span class="token operator">=</span><span class="token string">"significance"</span><span class="token punctuation">,</span> 
+                       breaks <span class="token operator">=</span> c<span class="token punctuation">(</span><span class="token string">'Up'</span><span class="token punctuation">,</span> <span class="token string">'None'</span><span class="token punctuation">,</span> <span class="token string">'Down'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+                       values <span class="token operator">=</span> c<span class="token punctuation">(</span>"<span class="token comment" spellcheck="true">#d56e5e","#cccccc", "#5390b5")) + #set color for: Down None   Up</span>
+    geom_tile<span class="token punctuation">(</span>dat.infor<span class="token punctuation">,</span> mapping<span class="token operator">=</span>aes<span class="token punctuation">(</span>x.local<span class="token punctuation">,</span> y.infor<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token comment" spellcheck="true">#x axis color box</span>
+              height <span class="token operator">=</span> log2Foldchang<span class="token operator">*</span><span class="token number">1.3</span><span class="token punctuation">,</span>
+              fill <span class="token operator">=</span> color.arr<span class="token punctuation">[</span><span class="token number">1</span><span class="token operator">:</span>length<span class="token punctuation">(</span>unique<span class="token punctuation">(</span>dat.plot<span class="token operator">$</span>cluster<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+              alpha <span class="token operator">=</span> <span class="token number">0.5</span><span class="token punctuation">,</span>
+              width<span class="token operator">=</span>width<span class="token punctuation">)</span> <span class="token operator">+</span>
+    labs<span class="token punctuation">(</span>x<span class="token operator">=</span><span class="token keyword">NULL</span><span class="token punctuation">,</span>y<span class="token operator">=</span><span class="token string">"log2 Fold change"</span><span class="token punctuation">)</span><span class="token operator">+</span>
+    geom_text<span class="token punctuation">(</span>dat.infor<span class="token punctuation">,</span> mapping<span class="token operator">=</span>aes<span class="token punctuation">(</span>x.local<span class="token punctuation">,</span>y.infor<span class="token punctuation">,</span>label<span class="token operator">=</span>cluster<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token operator">+</span>
+    <span class="token comment" spellcheck="true"># Down is not recommend, not meaningful, hard to explain; so prefer dat.marked.up to dat.marked</span>
+    ggrepel<span class="token operator">::</span>geom_label_repel<span class="token punctuation">(</span>data<span class="token operator">=</span><span class="token keyword">if</span><span class="token punctuation">(</span>onlyAnnotateUp<span class="token punctuation">)</span> dat.marked.up <span class="token keyword">else</span> dat.marked<span class="token punctuation">,</span> <span class="token comment" spellcheck="true">#gene symbol, of up group default</span>
+                              mapping<span class="token operator">=</span>aes<span class="token punctuation">(</span>x<span class="token operator">=</span>x.local<span class="token punctuation">,</span> y<span class="token operator">=</span>avg_log2FC<span class="token punctuation">,</span> label<span class="token operator">=</span>gene<span class="token punctuation">)</span><span class="token punctuation">,</span>
+                              force <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token comment" spellcheck="true">#size=2,</span>
+                              max.overlaps <span class="token operator">=</span> max_overlaps<span class="token punctuation">,</span>
+                              label.size <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token comment" spellcheck="true">#no border</span>
+                              fill<span class="token operator">=</span>"<span class="token comment" spellcheck="true">#00000000", #box fill color</span>
+                              seed <span class="token operator">=</span> <span class="token number">233</span><span class="token punctuation">,</span>
+                              min.segment.length <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">,</span>
+                              force_pull <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">,</span>
+                              box.padding <span class="token operator">=</span> <span class="token number">0.1</span><span class="token punctuation">,</span>
+                              segment.linetype <span class="token operator">=</span> <span class="token number">3</span><span class="token punctuation">,</span>
+                              <span class="token comment" spellcheck="true">#segment.color = 'black',</span>
+                              <span class="token comment" spellcheck="true">#segment.alpha = 0.5,</span>
+                              <span class="token comment" spellcheck="true">#direction = "x", #line direction</span>
+                              hjust <span class="token operator">=</span> <span class="token number">0.5</span><span class="token punctuation">)</span><span class="token operator">+</span>
+    annotate<span class="token punctuation">(</span><span class="token string">"text"</span><span class="token punctuation">,</span> x<span class="token operator">=</span><span class="token number">1.5</span><span class="token punctuation">,</span> y<span class="token operator">=</span>max<span class="token punctuation">(</span>background.dat<span class="token operator">$</span>y.localup<span class="token punctuation">)</span><span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">,</span>
+             label<span class="token operator">=</span>paste0<span class="token punctuation">(</span><span class="token string">"|log2FC|>="</span><span class="token punctuation">,</span> log2Foldchang<span class="token punctuation">,</span> <span class="token string">" &amp; FDR&lt;"</span><span class="token punctuation">,</span> adjp<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token operator">+</span>
+    theme_classic<span class="token punctuation">(</span>base_size <span class="token operator">=</span> <span class="token number">12</span><span class="token punctuation">)</span><span class="token operator">+</span>
     
-    theme(
-      axis.title = element_text(size = 13, color = "black"),
-      axis.text = element_text(size = 15, color = "black"),
-      axis.line.y = element_line(color = "black", size = 0.8),
-      #
-      axis.line.x = element_blank(), #no x axis line
-      axis.ticks.x = element_blank(), #no x axis ticks
-      axis.title.x = element_blank(), #
-      axis.text.x = element_blank(),
-      #
-      legend.spacing.x = unit(0.1,'cm'),
-      legend.key.width = unit(0.5,'cm'),
-      legend.key.height = unit(0.5,'cm'),
-      legend.background = element_blank(),
-      legend.box = "horizontal",
-      legend.position = c(0.13, 0.77),legend.justification = c(1,0)
-    )+
-    guides( #color = guide_legend( override.aes = list(size=5) ), #legend circle size
-      color=guide_legend( override.aes = list(size=5), title="Change")
-    )
-  #guides(fill=guide_legend(title="Change"))+ #change legend title
+    theme<span class="token punctuation">(</span>
+      axis.title <span class="token operator">=</span> element_text<span class="token punctuation">(</span>size <span class="token operator">=</span> <span class="token number">13</span><span class="token punctuation">,</span> color <span class="token operator">=</span> <span class="token string">"black"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+      axis.text <span class="token operator">=</span> element_text<span class="token punctuation">(</span>size <span class="token operator">=</span> <span class="token number">15</span><span class="token punctuation">,</span> color <span class="token operator">=</span> <span class="token string">"black"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+      axis.line.y <span class="token operator">=</span> element_line<span class="token punctuation">(</span>color <span class="token operator">=</span> <span class="token string">"black"</span><span class="token punctuation">,</span> size <span class="token operator">=</span> <span class="token number">0.8</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+      <span class="token comment" spellcheck="true">#</span>
+      axis.line.x <span class="token operator">=</span> element_blank<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token comment" spellcheck="true">#no x axis line</span>
+      axis.ticks.x <span class="token operator">=</span> element_blank<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token comment" spellcheck="true">#no x axis ticks</span>
+      axis.title.x <span class="token operator">=</span> element_blank<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token comment" spellcheck="true">#</span>
+      axis.text.x <span class="token operator">=</span> element_blank<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+      <span class="token comment" spellcheck="true">#</span>
+      legend.spacing.x <span class="token operator">=</span> unit<span class="token punctuation">(</span><span class="token number">0.1</span><span class="token punctuation">,</span><span class="token string">'cm'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+      legend.key.width <span class="token operator">=</span> unit<span class="token punctuation">(</span><span class="token number">0.5</span><span class="token punctuation">,</span><span class="token string">'cm'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+      legend.key.height <span class="token operator">=</span> unit<span class="token punctuation">(</span><span class="token number">0.5</span><span class="token punctuation">,</span><span class="token string">'cm'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+      legend.background <span class="token operator">=</span> element_blank<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+      legend.box <span class="token operator">=</span> <span class="token string">"horizontal"</span><span class="token punctuation">,</span>
+      legend.position <span class="token operator">=</span> c<span class="token punctuation">(</span><span class="token number">0.13</span><span class="token punctuation">,</span> <span class="token number">0.77</span><span class="token punctuation">)</span><span class="token punctuation">,</span>legend.justification <span class="token operator">=</span> c<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">)</span>
+    <span class="token punctuation">)</span><span class="token operator">+</span>
+    guides<span class="token punctuation">(</span> <span class="token comment" spellcheck="true">#color = guide_legend( override.aes = list(size=5) ), #legend circle size</span>
+      color<span class="token operator">=</span>guide_legend<span class="token punctuation">(</span> override.aes <span class="token operator">=</span> list<span class="token punctuation">(</span>size<span class="token operator">=</span><span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">,</span> title<span class="token operator">=</span><span class="token string">"Change"</span><span class="token punctuation">)</span>
+    <span class="token punctuation">)</span>
+  <span class="token comment" spellcheck="true">#guides(fill=guide_legend(title="Change"))+ #change legend title</span>
   vol.plot
-}
+<span class="token punctuation">}</span>
 
-## 调用自定义函数绘图
-multiVolcanoPlot(markers,log2Foldchang = 0.5,adjp = 0.05,color.arr = col)
-# multiVolcanoPlot(scObj.markers.time, onlyAnnotateUp = F)
-ggsave('volcano7.png',dpi = 300,bg = 'white',width = 8,height = 7)
+<span class="token comment" spellcheck="true">## 调用自定义函数绘图</span>
+multiVolcanoPlot<span class="token punctuation">(</span>markers<span class="token punctuation">,</span>log2Foldchang <span class="token operator">=</span> <span class="token number">0.5</span><span class="token punctuation">,</span>adjp <span class="token operator">=</span> <span class="token number">0.05</span><span class="token punctuation">,</span>color.arr <span class="token operator">=</span> col<span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true"># multiVolcanoPlot(scObj.markers.time, onlyAnnotateUp = F)</span>
+ggsave<span class="token punctuation">(</span><span class="token string">'volcano7.png'</span><span class="token punctuation">,</span>dpi <span class="token operator">=</span> <span class="token number">300</span><span class="token punctuation">,</span>bg <span class="token operator">=</span> <span class="token string">'white'</span><span class="token punctuation">,</span>width <span class="token operator">=</span> <span class="token number">8</span><span class="token punctuation">,</span>height <span class="token operator">=</span> <span class="token number">7</span><span class="token punctuation">)</span>
 <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <blockquote>
 <p><strong>最后，如果项目和教程对你有所帮助或者你看见了还算比较喜欢，欢迎给我<code>star</code>，谢谢您！</strong></p>
@@ -1734,7 +1734,7 @@ ggsave('volcano7.png',dpi = 300,bg = 'white',width = 8,height = 7)
 
             
                 &nbsp; | &nbsp;字数统计:&nbsp;
-                <span class="white-color">4.6k</span> 字
+                <span class="white-color">7.8k</span> 字
             
 
             
